@@ -1,10 +1,10 @@
 .PHONY: build run stop
 
 build:
-	cd backend && docker-compose build
+	cd back-end && docker-compose build
 
 serve:
-	cd backend && docker-compose up
+	cd back-end && docker-compose up
 
 stop:
-	cd backend && docker-compose down
+	cd back-end && docker-compose down

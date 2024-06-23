@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  tripcast-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: tripcast
+      POSTGRES_PASSWORD: tripcast
+      POSTGRES_DB: tripcast
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  tripcast-backend:
+    build: .
+    ports:
+      - "4003:4003"
+    depends_on:
+      - tripcast-db
+
+volumes:
+  db-data:
