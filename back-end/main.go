@@ -29,6 +29,6 @@ func main() {
 	uu := usecase.NewUsersUsecase(ur)
 	handler.NewUsersHandler(r, uu)
 
-	log.Println("Starting server on port 4003...")
+	log.Println("Started server on port 4003...")
 	http.ListenAndServe(":4003", r)
 }
