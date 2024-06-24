@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+.loading {
+  --speed-of-animation: 1.5s;
+  --gap: 6px;
+  --primary-color: rgba(219, 167, 23, 0.247);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  height: 80px;
+}
+
+.loading span {
+  width: 10px;
+  border-radius: 10px;
+  height: 50px;
+  background: var(--primary-color);
+  animation: scale var(--speed-of-animation) ease-in-out infinite;
+}
+
+.loading span:nth-child(2) {
+  background: var(--primary-color);
+  animation-delay: -1.3s;
+}
+
+.loading span:nth-child(3) {
+  background: var(--primary-color);
+  animation-delay: -1.1s;
+}
+
+.loading span:nth-child(4) {
+  background: var(--primary-color);
+  animation-delay: -0.9s;
+}
+
+.loading span:nth-child(5) {
+  background: var(--primary-color);
+  animation-delay: -0.7s;
+}
+
+@keyframes scale {
+  0%,
+  40%,
+  100% {
+    transform: scaleY(0.05);
+    background-color: rgba(255, 166, 0, 0.068);
+  }
+
+  20% {
+    transform: scaleY(1);
+    background-color: rgba(255, 166, 0, 0.705);
+  }
+}
