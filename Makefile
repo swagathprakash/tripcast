@@ -1,5 +1,8 @@
 .PHONY: build run stop
 
+node:
+	cd front-end && npm i 
+
 start-app:
 	cd front-end && npm start
 
