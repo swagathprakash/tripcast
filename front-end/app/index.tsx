@@ -11,15 +11,11 @@ const App = () => {
         <View className="min-h-[85vh] h-full justify-center items-center w-full px-4">
           <View className="relative mt-5">
             <Text className="text-2xl text-white font-bold text-center">
-              Discover
+              Discovers
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                router.push("/home");
-              }}
-            >
+            <TouchableOpacity onPress={()=>{router.push('/sign-in')}}>
               <Text>Press</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
