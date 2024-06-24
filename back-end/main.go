@@ -2,9 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
-	"trip-cast/config"
+	"trip-cast/internal/database"
+	"trip-cast/internal/env"
 	"trip-cast/middlewares"
 	"trip-cast/users/handler"
 	"trip-cast/users/repository"
@@ -16,8 +18,11 @@ import (
 )
 
 func main() {
-	cfg := config.NewConfig()
-	db, err := sql.Open("postgres", cfg.GetDatabaseURL())
+
+	env := env.NewEnvConfig()
+
+	database := database.NewDatabase(env.DatabaseUser, env.DatabasePassword, env.DatabaseName, env.DatabaseHost, env.DatabasePort)
+	db, err := sql.Open("postgres", database.GetDatabaseURL())
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
@@ -31,6 +36,6 @@ func main() {
 	uu := usecase.NewUsersUsecase(ur)
 	handler.NewUsersHandler(r, uu)
 
-	log.Println("Started server on port 4003...")
-	http.ListenAndServe(":4003", r)
+	log.Println("Server started")
+	http.ListenAndServe(fmt.Sprintf(":%d", env.ApiPort), r)
 }

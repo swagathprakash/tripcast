@@ -1,13 +1,9 @@
 # TRIPCAST
 
-### Build the Application - run following 3 commands to setup backend
+### Build backend application
 
-- Run command `make build` to build all the applications (database, migration, api).
-
-### Run all application
-
-- Run command `make serve` to run database and application server.
-- After this server will start listening on port 4003
+- Run command `make start-server` to build all the applications (database, migration, api).
+- After this, server will start listening on port 4003
 
 ### Run all migrations
 
