@@ -15,6 +15,10 @@ type ErrorResponse struct {
 	Errors  []error `json:"errors"`
 }
 
+type Errors struct {
+	Code int `json:"error code"`
+}
+
 func Fail(w http.ResponseWriter, status int, errors []error) {
 	res := ErrorResponse{
 		Success: false,
