@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"trip-cast/config"
+	"trip-cast/middlewares"
 	"trip-cast/users/handler"
 	"trip-cast/users/repository"
 	"trip-cast/users/usecase"
@@ -24,6 +25,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Use(middlewares.SetContentType)
 
 	ur := repository.NewUsersRepository(db)
 	uu := usecase.NewUsersUsecase(ur)

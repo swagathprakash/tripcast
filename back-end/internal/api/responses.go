@@ -11,18 +11,19 @@ type SuccessResponse struct {
 }
 
 type ErrorResponse struct {
-	Success bool    `json:"success"`
-	Errors  []error `json:"errors"`
+	Success bool     `json:"success"`
+	Errors  []Errors `json:"errors"`
 }
 
 type Errors struct {
-	Code int `json:"error code"`
+	Code    int    `json:"error code"`
+	Message string `json:"message"`
 }
 
-func Fail(w http.ResponseWriter, status int, errors []error) {
+func Fail(w http.ResponseWriter, status int, errors []Errors) {
 	res := ErrorResponse{
 		Success: false,
-		Errors: errors,
+		Errors:  errors,
 	}
 
 	resBytes, err := json.Marshal(res)
@@ -51,7 +52,7 @@ func Success(w http.ResponseWriter, status int, data any) {
 
 	res := SuccessResponse{
 		Success: true,
-		Data: dataBytes,
+		Data:    dataBytes,
 	}
 
 	resBytes, err := json.Marshal(res)
