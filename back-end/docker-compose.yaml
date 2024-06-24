@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   tripcast-db:
+    restart: always
     image: postgres:13
     environment:
       POSTGRES_USER: tripcast
@@ -10,6 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
       - db-data:/var/lib/postgresql/data
 
   tripcast-backend:
