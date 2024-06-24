@@ -14,6 +14,6 @@ var (
 
 const (
 	NumberOfDigitsInMobileNumber = 10
-	MaxValueOfOTP                = 999999
-	MinValueOfOTP                = 100000
+	MaxValueOfOTP                = 9999
+	MinValueOfOTP                = 1000
 )
