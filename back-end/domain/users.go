@@ -1,10 +1,22 @@
 package domain
 
-type Users struct{
+import "context"
 
+type Users struct {
+	UserID       uint64
+	FirstName    string
+	LastName     string
+	MobileNumber string
 }
 
+type UsersRepository interface {
+	GetUserDetails(ctx context.Context, mobileNumber string) (*Users, error)
+	Register(ctx context.Context, userData UsersDTO) error
+}
 
-type UsersRepository interface{}
-
-type UsersUsecase interface{}
+type UsersUsecase interface {
+	GetUserDetails(ctx context.Context, mobileNumber string) (*Users, error)
+	GenerateOTP(mobileNumber string)
+	VerifyOTP(ctx context.Context, mobileNumber string, otp int) (*Users, error)
+	Register(ctx context.Context, userData UsersDTO) error
+}
