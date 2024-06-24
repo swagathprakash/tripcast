@@ -13,8 +13,8 @@ const App = () => {
             <Text className="text-2xl text-white font-bold text-center">
               Discovers
             </Text>
-            <TouchableOpacity onPress={()=>{router.push('/sign-in')}}>
-              <Text>Press</Text>
+            <TouchableOpacity onPress={()=>{router.push('/authentication')}}>
+              <Text className="text-white">Press</Text>
               </TouchableOpacity>
           </View>
         </View>
