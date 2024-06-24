@@ -12,7 +12,7 @@ const SignIn = () => {
   const [newUser, setNewUser] = useState<boolean>(false);
 
   return !newUser ? (
-    <View className="flex-1 items-center justify-center">
+    <View className="flex-1  items-center justify-center rounded-md " >
       <View className="justify-center items-center mt-2 pb-10">
         <Text className="text-white text-3xl font-bold mb-2 tracking-[5]">
           Welcome

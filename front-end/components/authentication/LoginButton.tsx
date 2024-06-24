@@ -14,7 +14,7 @@ const LoginButton = ({
   return (
     <View>
       <TouchableOpacity
-        className={`bg-white px-2 py-2 rounded-full my-5 items-center justify-center `}
+        className={`bg-white px-2 py-2 rounded-md my-5 items-center justify-center `}
         onPress={() => {
           const result = validateMobileNumber(number);
           !result && setError(true);

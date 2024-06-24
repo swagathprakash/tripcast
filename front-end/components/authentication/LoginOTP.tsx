@@ -22,7 +22,7 @@ const LoginOTP = ({
   return (
     <View>
       <View
-        className={`bg-white flex-row items-center text-center px-2 h-12 mt-5 rounded-full  ${
+        className={`bg-white flex-row items-center text-center px-2 h-12 mt-5 rounded-md  ${
           error && "border-[1px] border-red-500"
         } `}
       >
@@ -42,13 +42,13 @@ const LoginOTP = ({
         />
       </View>
       {error && (
-        <Text className="text-red-500 font-medium mt-1 text-xs px-6">
+        <Text className="text-red-500 font-medium mt-1 text-xs px-2">
           Invalid OTP
         </Text>
       )}
       <View>
         <TouchableOpacity
-          className={`bg-white px-2 py-2 rounded-full my-5 items-center justify-center `}
+          className={`bg-white px-2 py-2 rounded-md my-5 items-center justify-center `}
           onPress={() => {
             //validate otp here
             //   const result = validateMobileNumber(number);

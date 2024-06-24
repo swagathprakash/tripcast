@@ -16,8 +16,8 @@ const LoginMobile = ({
   setError: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <View className="my-1">
-      <View className={`bg-white flex-row items-center px-2 rounded-full  ${error && 'border-[1px] border-red-500'} `}>
+    <View className="my-1 w-full">
+      <View className={`bg-white flex-row items-center px-2 rounded-md  ${error && 'border-[1px] border-red-500'} `}>
         <View className="px-2  border-r-[2px] border-r-gray-200 py-2">
           <Text className={`font-medium text-2xl ${error ? 'text-red-500':'text-black'}`}>+91</Text>
         </View>
@@ -37,7 +37,7 @@ const LoginMobile = ({
         />
       </View>
       {error && (
-        <Text className="text-red-500 font-medium mt-1 text-xs px-6">
+        <Text className="text-red-500 font-medium mt-1 text-xs px-2">
           Enter valid mobile number
         </Text>
       )}
