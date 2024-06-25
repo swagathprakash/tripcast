@@ -25,7 +25,7 @@ const SignupCard = ({ otp, number }: { otp: string; number: string }) => {
         otp: otp,
         phone: number,
         first_name: user.firstName,
-        second_name: user.lastName,
+        last_name: user.lastName,
       })
       .then((value) => {
         setIsLoading(false);
