@@ -12,6 +12,8 @@ require (
 
 require (
 	github.com/rs/cors v1.11.0 // indirect
+	github.com/innotechdevops/openmeteo v1.0.1 // indirect
+	github.com/prongbang/callx v1.2.3 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
 	golang.org/x/crypto v0.20.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect

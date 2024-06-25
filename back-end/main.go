@@ -7,10 +7,12 @@ import (
 	"trip-cast/internal/database"
 	"trip-cast/internal/env"
 	"trip-cast/internal/sms"
+	"trip-cast/internal/weather"
 	"trip-cast/middlewares"
-	"trip-cast/users/handler"
-	"trip-cast/users/repository"
-	"trip-cast/users/usecase"
+	usersHandler "trip-cast/users/handler"
+	usersRepository "trip-cast/users/repository"
+	usersUsecase "trip-cast/users/usecase"
+	weatherHandler "trip-cast/weather/handler"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -20,8 +22,10 @@ import (
 
 func main() {
 
+	// load env
 	env := env.NewEnvConfig()
 
+	// setup db
 	db := database.NewDatabase(env.DatabaseUser, env.DatabasePassword, env.DatabaseName, env.DatabaseHost, env.DatabasePort)
 	defer db.Close()
 
@@ -39,13 +43,19 @@ func main() {
 	r.Use(middlewares.SetContentType)
 	r.Use(corsHandler)
 
-	// setup domains
-	ur := repository.NewUsersRepository(db)
+	// setup services
 	sms := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
-	uu := usecase.NewUsersUsecase(ur, sms)
-	handler.NewUsersHandler(r, uu)
+	w := weather.NewWeatherService()
+
+	// setup domains
+	ur := usersRepository.NewUsersRepository(db)
+	uu := usersUsecase.NewUsersUsecase(ur, sms)
+	usersHandler.NewUsersHandler(r, uu)
+
+	weatherHandler.NewWeatherHandler(r, w)
 
 	// start server
 	log.Println("Server started")
-	http.ListenAndServe(fmt.Sprintf(":%d", env.ApiPort), r)
+	apiPort := fmt.Sprintf(":%d", env.ApiPort)
+	http.ListenAndServe(apiPort, r)
 }
