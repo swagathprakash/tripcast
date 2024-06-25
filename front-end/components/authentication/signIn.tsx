@@ -1,24 +1,21 @@
-import { View, Text, ImageBackground, ScrollView } from "react-native";
+import { View, Text } from "react-native";
 import React, { useState } from "react";
 import LoginMobile from "./LoginMobile";
 import LoginButton from "./LoginButton";
 import LoginOTP from "./LoginOTP";
 import SignupCard from "./SignupCard";
-import { images } from "@/constants";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../Logo";
-import { StatusBar } from "expo-status-bar";
 
 const SignIn = () => {
   const [number, setNumber] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>("");
   const [signup, setSignup] = useState<boolean>(false);
   const [newUser, setNewUser] = useState<boolean>(false);
 
   return !newUser ? (
-    <View className="flex-1  items-center justify-center rounded-md " >
+    <View className="flex-1  items-center justify-center rounded-md ">
       <View className="justify-center items-center mt-2 pb-10">
-        <Text className="text-primary text-3xl font-bold mb-2 tracking-[5]">
+        <Text className="text-primary text-3xl font-bold mb-2 tracking-[5px]">
           Welcome
         </Text>
         <Text className="text-primary font-semibold text-xs mt-2">
@@ -33,7 +30,14 @@ const SignIn = () => {
           setNumber={setNumber}
           disabled={signup}
         />
-        {signup && <LoginOTP setNewUser={setNewUser} />}
+        {signup && (
+          <LoginOTP
+            otp={otp}
+            setOtp={setOtp}
+            number={number}
+            setNewUser={setNewUser}
+          />
+        )}
         {!signup && (
           <LoginButton
             number={number}
@@ -44,7 +48,7 @@ const SignIn = () => {
       </View>
     </View>
   ) : (
-    <SignupCard />
+    <SignupCard number={number} otp={otp} />
   );
 };
 

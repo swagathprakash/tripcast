@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   tripcast-db:
@@ -17,7 +17,7 @@ services:
   tripcast-backend:
     build: .
     ports:
-      - "4003:4003"
+      - "0.0.0.0:4003:4003"
     depends_on:
       - tripcast-db
 

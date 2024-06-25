@@ -3,20 +3,54 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
+import axios from "axios";
+import { router } from "expo-router";
+import { endpoints } from "@/constants";
+
+const verifyOtpUrl = endpoints.BACKEND_URL+"/verify-otp";
 
 const LoginOTP = ({
   setNewUser,
+  number,
+  otp,
+  setOtp,
 }: {
   setNewUser: React.Dispatch<React.SetStateAction<boolean>>;
+  setOtp: React.Dispatch<React.SetStateAction<string>>;
+  otp: string;
+  number: string;
 }) => {
-  const [otp, setOtp] = useState<string>();
   const [error, setError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const validateOtp = (otp: string) => {
-    return otp === "4567";
+  const verifyOtp = async (otp: string) => {
+    setIsLoading(true);
+    const result = await axios
+      .post(verifyOtpUrl, { otp: parseInt(otp), phone: number })
+      .then((value) => {
+        if (value.data.user_present) {
+          //setuser to the slice
+          router.push("/home");
+        }
+        setIsLoading(false);
+        setNewUser(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setIsLoading(false);
+    return result;
+  };
+
+  const verifyOtpTemp = (otp: string) => {
+    if (otp === "6969") {
+      setNewUser(true);
+    } else {
+      setError(true);
+    }
   };
 
   return (
@@ -29,13 +63,12 @@ const LoginOTP = ({
         <TextInput
           keyboardType="numeric"
           className={`font-medium px-3 text-center w-full text-base duration-500 text-primary    ${
-            otp && " text-2xl px-2 tracking-[20]"
+            otp && " text-2xl px-2 tracking-[20px]"
           } ${error && "text-red-500"}`}
           value={otp}
           onChangeText={(e: any) => {
             setError(false);
             e.length < 5 && setOtp(e);
-            // e.length == 4 && Keyboard.dismiss();
           }}
           placeholder="Enter OTP"
           placeholderTextColor={"#b5b5b5"}
@@ -48,20 +81,24 @@ const LoginOTP = ({
       )}
       <View>
         <TouchableOpacity
-          className={`bg-white px-2 py-2 rounded-md my-5 items-center justify-center `}
+          className={`bg-white px-2 py-2 rounded-md my-5 items-center justify-center border-[1px] border-primary `}
           onPress={() => {
-            //validate otp here
-            //   const result = validateMobileNumber(number);
-            const result = validateOtp(otp as string);
-            !result && setError(true);
-            result && setNewUser(true);
+            if (otp.length !== 4) {
+              setError(true);
+            } else {
+              verifyOtpTemp(otp);
+            }
           }}
           activeOpacity={0.8}
-          disabled={!otp}
+          disabled={otp.length < 1}
         >
-          <Text className={`text-primary  tracking-widest text-2xl font-bold`}>
-            CONTINUE
-          </Text>
+          {!isLoading ? (
+            <Text className={`text-primary tracking-widest text-xl font-bold`}>
+              Verify
+            </Text>
+          ) : (
+            <ActivityIndicator size={"small"} color={"#827F75"} />
+          )}
         </TouchableOpacity>
       </View>
     </View>
