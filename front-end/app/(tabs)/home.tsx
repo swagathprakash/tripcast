@@ -1,11 +1,12 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
+import Dashboard from "@/components/dashboard/dashboard";
 
 const Home = () => {
   return (
-      <View className="w-full px-5 justify-start h-full">
-        <Text>Home</Text>
-      </View>
+    <ScrollView className='flex-1'>
+      <Dashboard/>
+    </ScrollView>
   );
 };
 

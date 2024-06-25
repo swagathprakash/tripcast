@@ -16,7 +16,7 @@ const App = () => {
         resizeMode="cover"
       >
         <ScrollView contentContainerStyle={{ height: "100%" }}>
-          <Logo skip={true} />
+          <Logo skip={false} />
           <TextCarousel />
           <CustomButton content="Get started" navigator="/authentication" />
         </ScrollView>

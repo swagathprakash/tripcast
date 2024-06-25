@@ -19,15 +19,12 @@ const LoginButton = ({
 
   const getOtp = async (number: string) => {
     const fetchUrl = `${getOtpUrl}?phone=${number}`;
-    const result = await axios
-      .get(fetchUrl)
-      .then((value) => {
-        setIsLoading(false);
-        setSignup(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // const result = await axios.get(fetchUrl).catch((err) => {
+    //   console.log(err);
+    // });
+    const result = await new Promise((reslove) => setTimeout(reslove, 2000));
+    setIsLoading(false);
+    setSignup(true);
     setIsLoading(false);
     return result;
   };

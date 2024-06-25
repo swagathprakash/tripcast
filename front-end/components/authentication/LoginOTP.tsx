@@ -10,7 +10,7 @@ import axios from "axios";
 import { router } from "expo-router";
 import { endpoints } from "@/constants";
 
-const verifyOtpUrl = endpoints.BACKEND_URL+"/verify-otp";
+const verifyOtpUrl = endpoints.BACKEND_URL + "/verify-otp";
 
 const LoginOTP = ({
   setNewUser,
@@ -28,21 +28,25 @@ const LoginOTP = ({
 
   const verifyOtp = async (otp: string) => {
     setIsLoading(true);
-    const result = await axios
+    const { data }: any = await axios
       .post(verifyOtpUrl, { otp: parseInt(otp), phone: number })
-      .then((value) => {
-        if (value.data.user_present) {
-          //setuser to the slice
-          router.push("/home");
-        }
-        setIsLoading(false);
-        setNewUser(true);
-      })
+
       .catch((err) => {
         console.log(err);
       });
+    if (data?.data?.verified == false) {
+      setError(true);
+      return;
+    }
+    if (data?.data?.user_present) {
+      //setuser to the slice
+      router.push("/home");
+    }
     setIsLoading(false);
-    return result;
+    setNewUser(true);
+    console.log(data);
+    setIsLoading(false);
+    return data;
   };
 
   const verifyOtpTemp = (otp: string) => {
