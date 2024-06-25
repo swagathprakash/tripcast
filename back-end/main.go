@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -22,11 +21,7 @@ func main() {
 
 	env := env.NewEnvConfig()
 
-	database := database.NewDatabase(env.DatabaseUser, env.DatabasePassword, env.DatabaseName, env.DatabaseHost, env.DatabasePort)
-	db, err := sql.Open("postgres", database.GetDatabaseURL())
-	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
-	}
+	db := database.NewDatabase(env.DatabaseUser, env.DatabasePassword, env.DatabaseName, env.DatabaseHost, env.DatabasePort)
 	defer db.Close()
 
 	// CORS middleware
