@@ -22,7 +22,6 @@ func NewUsersUsecase(userRepo domain.UsersRepository) domain.UsersUsecase {
 type otpInfo struct {
 	otp       int
 	exp       time.Time
-	noOfRetry int
 }
 
 var otpMap = make(map[string]otpInfo)
@@ -73,7 +72,7 @@ func (u *usersUsecase) Register(ctx context.Context, userData domain.UsersDTO) e
 
 	err := u.userRepo.Register(ctx, userData)
 	if err != nil {
-		log.Panicln("failed to store user data with error", err)
+		log.Println("failed to store user data with error", err)
 		return err
 	}
 	return nil
