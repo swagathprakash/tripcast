@@ -22,7 +22,7 @@ const LoginOTP = ({
   return (
     <View>
       <View
-        className={`bg-white flex-row items-center text-center px-2 h-12 mt-5 rounded-md  ${
+        className={`bg-white flex-row items-center text-center px-2 h-12 mt-5 rounded-md border-primary border-[1px] ${
           error && "border-[1px] border-red-500"
         } `}
       >

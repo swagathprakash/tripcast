@@ -23,7 +23,7 @@ const AuthLayout = () => {
   }, []);
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <Logo />
+      <Logo skip={true} />
       <SignIn />
     </SafeAreaView>
   );
