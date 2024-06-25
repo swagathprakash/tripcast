@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"trip-cast/internal/database"
 	"trip-cast/internal/env"
+	"trip-cast/internal/sms"
 	"trip-cast/middlewares"
 	"trip-cast/users/handler"
 	"trip-cast/users/repository"
@@ -40,7 +41,8 @@ func main() {
 
 	// setup domains
 	ur := repository.NewUsersRepository(db)
-	uu := usecase.NewUsersUsecase(ur)
+	sms := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
+	uu := usecase.NewUsersUsecase(ur, sms)
 	handler.NewUsersHandler(r, uu)
 
 	// start server
