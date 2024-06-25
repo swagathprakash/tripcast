@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppSelector } from "@/store";
 import SignIn from "@/components/authentication/signIn";
 import Logo from "@/components/Logo";
+import { StatusBar } from "expo-status-bar";
 
 const AuthLayout = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -25,6 +26,7 @@ const AuthLayout = () => {
     <SafeAreaView className="flex-1 bg-white">
       <Logo skip={true} />
       <SignIn />
+      <StatusBar style="dark"/>
     </SafeAreaView>
   );
 };
