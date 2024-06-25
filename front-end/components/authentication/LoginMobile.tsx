@@ -16,14 +16,14 @@ const LoginMobile = ({
   setError: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <View className="my-1 w-full">
-      <View className={`bg-white flex-row items-center px-2 rounded-md  ${error && 'border-[1px] border-red-500'} `}>
+    <View className="my-1">
+      <View className={`bg-white flex-row items-center px-2 rounded-md border-primary border-[1px] ${error && 'border-[1px] border-red-500'} `}>
         <View className="px-2  border-r-[2px] border-r-gray-200 py-2">
-          <Text className={`font-medium text-2xl ${error ? 'text-red-500':'text-black'}`}>+91</Text>
+          <Text className={`font-medium text-2xl ${error ? 'text-red-500':'text-primary '}`}>+91</Text>
         </View>
         <TextInput
         keyboardType="numeric"
-          className={`font-medium px-3 text-base duration-500 text-black   ${
+          className={`font-medium px-3 text-base duration-500 text-primary    ${
             number && " text-2xl px-2 tracking-[4]"
           } ${error && "text-red-500"}`}
           value={number}

@@ -28,7 +28,7 @@ const LoginOTP = ({
       >
         <TextInput
           keyboardType="numeric"
-          className={`font-medium px-3 text-center w-full text-base duration-500 text-black   ${
+          className={`font-medium px-3 text-center w-full text-base duration-500 text-primary    ${
             otp && " text-2xl px-2 tracking-[20]"
           } ${error && "text-red-500"}`}
           value={otp}
@@ -59,7 +59,7 @@ const LoginOTP = ({
           activeOpacity={0.8}
           disabled={!otp}
         >
-          <Text className={`text-black tracking-widest text-2xl font-bold`}>
+          <Text className={`text-primary  tracking-widest text-2xl font-bold`}>
             CONTINUE
           </Text>
         </TouchableOpacity>
