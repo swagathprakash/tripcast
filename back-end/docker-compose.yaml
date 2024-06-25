@@ -5,9 +5,9 @@ services:
     restart: always
     image: postgres:13
     environment:
-      POSTGRES_USER: tripcast
-      POSTGRES_PASSWORD: tripcast
-      POSTGRES_DB: tripcast
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "5432:5432"
     volumes:
@@ -20,6 +20,20 @@ services:
       - "0.0.0.0:4003:4003"
     depends_on:
       - tripcast-db
+      - migrate
+  
+  migrate:
+    image: migrate/migrate
+    volumes:
+       - ./migration-data:/migrations
+    command: [
+      "-path", "/migrations",
+      "-database", "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@tripcast-db:5432/${DATABASE_NAME}?sslmode=disable",
+      "up"
+    ]
+    depends_on:
+      - tripcast-db
+
 
 volumes:
   db-data:
