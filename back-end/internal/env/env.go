@@ -10,7 +10,9 @@ import (
 )
 
 type EnvVariables struct {
-	ApiPort uint16 `required:"true"  split_words:"true"`
+	ApiPort     uint16 `required:"true"  split_words:"true"`
+	
+	FrontEndURL string `required:"true"  split_words:"true"`
 
 	// Database credentials
 	DatabaseHost     string `required:"true"  split_words:"true"`
