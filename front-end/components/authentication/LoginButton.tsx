@@ -14,7 +14,7 @@ const LoginButton = ({
   return (
     <View>
       <TouchableOpacity
-        className={`bg-white px-2 py-2 rounded-md my-5 items-center justify-center `}
+        className={`bg-white px-2 py-2 rounded-md my-5 items-center justify-center border-primary border-[1px] `}
         onPress={() => {
           const result = validateMobileNumber(number);
           !result && setError(true);
@@ -23,7 +23,7 @@ const LoginButton = ({
         activeOpacity={0.8}
         disabled={!number}
       >
-        <Text className={`text-black tracking-widest text-2xl font-bold`}>
+        <Text className={`text-primary tracking-widest text-2xl font-bold`}>
           GET OTP
         </Text>
       </TouchableOpacity>

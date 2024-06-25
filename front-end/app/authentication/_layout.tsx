@@ -1,11 +1,9 @@
-import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
 import React, { useEffect, useState } from "react";
+import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppSelector } from "@/store";
 import SignIn from "@/components/authentication/signIn";
-import { router } from "expo-router";
-import * as Location from "expo-location";
-import { images } from "@/constants";
+import Logo from "@/components/Logo";
 
 const AuthLayout = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -24,22 +22,9 @@ const AuthLayout = () => {
     getPermissions();
   }, []);
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      {/* <ImageBackground source={images.loginBackground}  resizeMode="contain"> */}
-      <View className=" mt-3 px-5 items-end">
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={() => {
-            router.push("/home");
-          }}
-        >
-          <Text className="text-white font-semibold tracking-wider text-base">
-            SKIP
-          </Text>
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <Logo />
       <SignIn />
-      {/* </ImageBackground> */}
     </SafeAreaView>
   );
 };

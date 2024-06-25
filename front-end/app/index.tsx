@@ -1,27 +1,36 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
+import { images } from "./../constants"
+import TextCarousel from "@/components/landing_page/TextCarousel";
+import Logo from "@/components/Logo";
+import CustomButton from "@/components/CustomButton";
 
 const App = () => {
   return (
-    <SafeAreaView className="bg-black h-full">
-      <ScrollView contentContainerStyle={{ height: "100%" }}>
-        <View className="min-h-[85vh] h-full justify-center items-center w-full px-4">
-          <View className="relative mt-5">
-            <Text className="text-2xl text-white font-bold text-center">
-              Discovers
-            </Text>
-            <TouchableOpacity onPress={()=>{router.push('/authentication')}}>
-              <Text className="text-white">Press</Text>
-              </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-      <StatusBar style="dark" />
-    </SafeAreaView>
+    <ImageBackground
+      source={images.landingPage}
+      className="w-[100vw] overflow-hidden flex-1"
+      resizeMode="cover"
+    >
+      <SafeAreaView className="h-full">
+        <ScrollView contentContainerStyle={{ height: "100%" }}>
+          <Logo />
+          <TextCarousel />
+          <CustomButton content="Get started" navigator="/authentication" />
+        </ScrollView>
+        <StatusBar style="dark" />
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 export default App;
+const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    width: "100%",
+    overflow: "hidden",
+  }
+})

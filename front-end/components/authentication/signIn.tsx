@@ -1,9 +1,13 @@
-import { View, Text } from "react-native";
+import { View, Text, ImageBackground, ScrollView } from "react-native";
 import React, { useState } from "react";
 import LoginMobile from "./LoginMobile";
 import LoginButton from "./LoginButton";
 import LoginOTP from "./LoginOTP";
 import SignupCard from "./SignupCard";
+import { images } from "@/constants";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Logo from "../Logo";
+import { StatusBar } from "expo-status-bar";
 
 const SignIn = () => {
   const [number, setNumber] = useState<string>("");
@@ -14,10 +18,10 @@ const SignIn = () => {
   return !newUser ? (
     <View className="flex-1  items-center justify-center rounded-md " >
       <View className="justify-center items-center mt-2 pb-10">
-        <Text className="text-white text-3xl font-bold mb-2 tracking-[5]">
+        <Text className="text-primary text-3xl font-bold mb-2 tracking-[5]">
           Welcome
         </Text>
-        <Text className="text-white font-semibold text-xs mt-2">
+        <Text className="text-primary font-semibold text-xs mt-2">
           Sign in to your account using your phone number.
         </Text>
       </View>
@@ -40,7 +44,7 @@ const SignIn = () => {
       </View>
     </View>
   ) : (
-    <SignupCard/>
+    <SignupCard />
   );
 };
 
