@@ -5,7 +5,6 @@ import (
 	"strings"
 )
 
-
 func GeneratePlaceHolders(columns, rows int) string {
 	var row []string
 	var columValue = 1
@@ -21,3 +20,7 @@ func GeneratePlaceHolders(columns, rows int) string {
 	return strings.Join(row, ",")
 }
 
+func ConvertToIndianMobileNumberFormat(mobileNumber string) string {
+	number := fmt.Sprintf("+91%s", mobileNumber)
+	return number
+}

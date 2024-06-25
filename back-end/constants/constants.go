@@ -16,4 +16,6 @@ const (
 	NumberOfDigitsInMobileNumber = 10
 	MaxValueOfOTP                = 9999
 	MinValueOfOTP                = 1000
+	TwillioAPIEndPoint           = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"
+	OTPMessage                   = "The OTP is : %d"
 )

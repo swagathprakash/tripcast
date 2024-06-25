@@ -78,7 +78,7 @@ func (h *usersHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	userDataDTO.MapFromDomain(userData)
 	res := domain.OTPVerifiedResponse{
 		Verified:    true,
-		UserPresent: false,
+		UserPresent: true,
 		UserData:    userDataDTO,
 	}
 	api.Success(w, http.StatusOK, res)
@@ -118,6 +118,13 @@ func (h *usersHandler) GenerateOTP(w http.ResponseWriter, r *http.Request) {
 		}})
 		return
 	}
-	h.usersUsecase.GenerateOTP(mobileNumber)
+	err := h.usersUsecase.GenerateOTP(mobileNumber)
+	if err != nil {
+		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
+			Code: http.StatusInternalServerError,
+			Message: constants.ErrInternalServerError.Error(),
+		}})
+		return
+	}
 	api.Success(w, http.StatusOK, "")
 }

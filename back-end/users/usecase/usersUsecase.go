@@ -2,20 +2,25 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/rand"
 	"time"
 	"trip-cast/constants"
 	"trip-cast/domain"
+	"trip-cast/internal/sms"
+	"trip-cast/internal/utils"
 )
 
 type usersUsecase struct {
 	userRepo domain.UsersRepository
+	sms      *sms.SMS
 }
 
-func NewUsersUsecase(userRepo domain.UsersRepository) domain.UsersUsecase {
+func NewUsersUsecase(userRepo domain.UsersRepository, sms *sms.SMS) domain.UsersUsecase {
 	return &usersUsecase{
 		userRepo: userRepo,
+		sms:      sms,
 	}
 }
 
@@ -35,12 +40,19 @@ func (u *usersUsecase) GetUserDetails(ctx context.Context, mobileNumber string) 
 	return users, nil
 }
 
-func (u *usersUsecase) GenerateOTP(mobileNumber string) {
+func (u *usersUsecase) GenerateOTP(mobileNumber string) error {
 	otp := rand.Intn(constants.MaxValueOfOTP-constants.MinValueOfOTP+1) + constants.MinValueOfOTP
+	mobileNumberWithInidanCountryCode := utils.ConvertToIndianMobileNumberFormat(mobileNumber)
+	err := u.sms.SentSMS(fmt.Sprintf(constants.OTPMessage, otp), mobileNumberWithInidanCountryCode)
+	if err != nil {
+		log.Println("failed to sent otp with error", err)
+		return err
+	}
 	otpMap[mobileNumber] = otpInfo{
 		otp: otp,
 		exp: time.Now().Add(2 * time.Minute),
 	}
+	return nil
 }
 
 func (u *usersUsecase) VerifyOTP(ctx context.Context, mobileNumber string, otp int) (*domain.Users, error) {
