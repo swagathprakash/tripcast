@@ -28,91 +28,90 @@ const TabIcon = ({ icon, color, focused, name }: any) => {
 
 const TabLayout = () => {
   return (
-    <SafeAreaView className="h-full">
-      <ImageBackground
-        className="w-[100vw] overflow-hidden flex-1"
-        resizeMode="cover"
+    <SafeAreaView className="h-full bg-white">
+      <ScrollView
+        contentContainerStyle={{ height: "100%", backgroundColor: "white" }}
       >
-        <ScrollView contentContainerStyle={{ height: "100%" }}>
-          <Logo />
-          <Tabs
-            screenOptions={{
+        <Logo />
+        <Tabs
+          screenOptions={{
+            // tabBarVisibilityAnimationConfig:{hide:'fade'}
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarHideOnKeyboard: true,
+            tabBarActiveTintColor: "white",
+            tabBarInactiveTintColor: "#827F75",
+            tabBarStyle: {
+              backgroundColor: "#161622",
+              borderTopWidth: 1,
+              borderTopColor: "#232533",
+              height: 64,
+            },
+          }}
+        >
+          <Tabs.Screen
+            name="home"
+            options={{
+              title: "Home",
               headerShown: false,
-              tabBarShowLabel: false,
-              tabBarActiveTintColor: "white",
-              tabBarInactiveTintColor: "#827F75",
-              tabBarStyle: {
-                backgroundColor: "#161622",
-                borderTopWidth: 1,
-                borderTopColor: "#232533",
-                height: 64,
-              },
+              tabBarIcon: ({ color, focused }) => (
+                <TabIcon
+                  icon={icons.home}
+                  color={color}
+                  name="Home"
+                  focused={focused}
+                />
+              ),
             }}
-          >
-            <Tabs.Screen
-              name="home"
-              options={{
-                title: "Home",
-                headerShown: false,
-                tabBarIcon: ({ color, focused }) => (
-                  <TabIcon
-                    icon={icons.home}
-                    color={color}
-                    name="Home"
-                    focused={focused}
-                  />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="create"
-              options={{
-                title: "Create",
-                headerShown: false,
-                tabBarIcon: ({ color, focused }) => (
-                  <TabIcon
-                    icon={icons.plus}
-                    color={color}
-                    name="Create"
-                    focused={focused}
-                  />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="notification"
-              options={{
-                title: "Notification",
-                headerShown: false,
-                tabBarIcon: ({ color, focused }) => (
-                  <TabIcon
-                    icon={icons.bookmark}
-                    color={color}
-                    name="Notification"
-                    focused={focused}
-                  />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="profile"
-              options={{
-                title: "Profile",
-                headerShown: false,
-                tabBarIcon: ({ color, focused }) => (
-                  <TabIcon
-                    icon={icons.profile}
-                    color={color}
-                    name="Profile"
-                    focused={focused}
-                  />
-                ),
-              }}
-            />
-          </Tabs>
-        </ScrollView>
-        <StatusBar style="dark" />
-      </ImageBackground>
+          />
+          <Tabs.Screen
+            name="create"
+            options={{
+              title: "Create",
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <TabIcon
+                  icon={icons.plus}
+                  color={color}
+                  name="Create"
+                  focused={focused}
+                />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="notification"
+            options={{
+              title: "Notification",
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <TabIcon
+                  icon={icons.bookmark}
+                  color={color}
+                  name="Notification"
+                  focused={focused}
+                />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="profile"
+            options={{
+              title: "Profile",
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <TabIcon
+                  icon={icons.profile}
+                  color={color}
+                  name="Profile"
+                  focused={focused}
+                />
+              ),
+            }}
+          />
+        </Tabs>
+      </ScrollView>
+      <StatusBar style="dark" />
     </SafeAreaView>
   );
 };

@@ -4,7 +4,7 @@ import Dashboard from "@/components/dashboard/dashboard";
 
 const Home = () => {
   return (
-    <ScrollView className='flex-1'>
+    <ScrollView className=' bg-white'>
       <Dashboard/>
     </ScrollView>
   );
