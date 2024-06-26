@@ -81,13 +81,15 @@ func (h weatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal([]byte(responseString), &response)
 	if err != nil {
-		log.Println("valid format for start_date/end_date is 'YYYY-MM-DD'")
+		log.Printf("unMarshalling response failed with error: %s", err.Error())
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
 			Code:    http.StatusInternalServerError,
 			Message: err.Error(),
 		}})
 		return
 	}
+
+	populateWeatherName(&response)
 
 	api.Success(w, http.StatusOK, response)
 
@@ -98,4 +100,20 @@ func isNotValidDateFormat(date string) bool {
 	dateRegex := `^\d{4}-\d{2}-\d{2}$`
 	regex := regexp.MustCompile(dateRegex)
 	return !regex.MatchString(date)
+}
+
+func populateWeatherName(response *weather.WeatherResponse) {
+	response.CurrentWeather.WeatherDetail = weather.WMOCodesMap[response.CurrentWeather.WeatherCode]
+	lenHourlyWeather := len(response.Hourly.WeatherCode)
+	lenDailyWeather := len(response.Daily.WeatherCode)
+
+	for i := 0; i < lenHourlyWeather; i++ {
+		hourlyWeatherCode := response.Hourly.WeatherCode[i]
+		response.Hourly.WeatherDetail = append(response.Hourly.WeatherDetail, weather.WMOCodesMap[hourlyWeatherCode])
+
+		if i < lenDailyWeather {
+			dailyWeatherCode := response.Daily.WeatherCode[i]
+			response.Daily.WeatherDetail = append(response.Daily.WeatherDetail, weather.WMOCodesMap[dailyWeatherCode])
+		}
+	}
 }
