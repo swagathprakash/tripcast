@@ -29,11 +29,22 @@ func NewGeminiService(ctx context.Context, apiKey, genModel string) *Model {
 }
 
 func (m Model) GenerateResponse(ctx context.Context, text string) (genai.Text, int32, error) {
-	resp, err := m.gemini.GenerateContent(ctx, genai.Text(text))
 
+	chat := m.gemini.StartChat()
+	chat.History = []*genai.Content{
+		{
+			Parts: []genai.Part{
+				genai.Text(UserPart),
+			},
+			Role: "user",
+		},
+	}
+
+	resp, err := chat.SendMessage(ctx, genai.Text(text))
 	if err != nil {
 		return "", 0, err
 	}
+
 	response := resp.Candidates[0].Content.Parts[0]
 	responseString, ok := response.(genai.Text)
 
