@@ -9,6 +9,7 @@ import (
 	"trip-cast/internal/database"
 	"trip-cast/internal/env"
 	"trip-cast/internal/gemini"
+	"trip-cast/internal/places"
 	"trip-cast/internal/sms"
 	"trip-cast/internal/weather"
 	"trip-cast/middlewares"
@@ -16,6 +17,8 @@ import (
 	usersRepository "trip-cast/users/repository"
 	usersUsecase "trip-cast/users/usecase"
 	weatherHandler "trip-cast/weather/handler"
+	placesUsecase "trip-cast/nearbyplaces/usecase"
+	placesHandler "trip-cast/nearbyplaces/handler"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -51,6 +54,7 @@ func main() {
 	sms := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
 	w := weather.NewWeatherService()
 	model := gemini.NewGeminiService(ctx, env.GeminiApiKey, env.GenModel)
+	places := places.NewNearByPlacesAPI(env.PlacesAPIKey)
 
 	// setup handlers
 	ur := usersRepository.NewUsersRepository(db)
@@ -58,6 +62,9 @@ func main() {
 	usersHandler.NewUsersHandler(r, uu)
 
 	weatherHandler.NewWeatherHandler(r, w)
+	
+	pu := placesUsecase.NewNearbyPlacesUsecase(places)
+	placesHandler.NewNearByPlacesHandler(r, pu)
 
 	chatBothandler.NewChatBotHandler(r, model)
 

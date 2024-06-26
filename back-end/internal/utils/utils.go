@@ -24,3 +24,19 @@ func ConvertToIndianMobileNumberFormat(mobileNumber string) string {
 	number := fmt.Sprintf("+91%s", mobileNumber)
 	return number
 }
+
+func IsCommonElementPresent[T comparable](slice1, slice2 []T) bool {
+	slice1Map := make(map[T]struct{}, len(slice1))
+
+	for _, val := range slice1 {
+		slice1Map[val] = struct{}{}
+	}
+
+	for _, val := range slice2 {
+		if _, ok := slice1Map[val]; ok {
+			return true
+		}
+	}
+
+	return false
+}
