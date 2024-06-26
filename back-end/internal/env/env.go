@@ -25,6 +25,10 @@ type EnvVariables struct {
 	TwillioAccountSID  string `required:"true" split_words:"true"`
 	TwillioAuthID      string `required:"true" split_words:"true"`
 	TwillioPhoneNumber string `required:"true" split_words:"true"`
+
+	//gemini
+	GeminiApiKey string `required:"true" split_words:"true"`
+	GenModel     string `required:"true" split_words:"true"`
 }
 
 func NewEnvConfig() EnvVariables {

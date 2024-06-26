@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	chatBothandler "trip-cast/chatbot/handler"
 	"trip-cast/internal/database"
 	"trip-cast/internal/env"
+	"trip-cast/internal/gemini"
 	"trip-cast/internal/sms"
 	"trip-cast/internal/weather"
 	"trip-cast/middlewares"
@@ -24,6 +27,7 @@ func main() {
 
 	// load env
 	env := env.NewEnvConfig()
+	ctx := context.Background()
 
 	// setup db
 	db := database.NewDatabase(env.DatabaseUser, env.DatabasePassword, env.DatabaseName, env.DatabaseHost, env.DatabasePort)
@@ -46,13 +50,16 @@ func main() {
 	// setup services
 	sms := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
 	w := weather.NewWeatherService()
+	model := gemini.NewGeminiService(ctx, env.GeminiApiKey, env.GenModel)
 
-	// setup domains
+	// setup handlers
 	ur := usersRepository.NewUsersRepository(db)
 	uu := usersUsecase.NewUsersUsecase(ur, sms)
 	usersHandler.NewUsersHandler(r, uu)
 
 	weatherHandler.NewWeatherHandler(r, w)
+
+	chatBothandler.NewChatBotHandler(r, model)
 
 	// start server
 	log.Println("Server started")
