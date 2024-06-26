@@ -2,3 +2,4 @@
 /front-end/.expo
 /back-end/.env.sample
 .vscode
+/back-end/.env

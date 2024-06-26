@@ -13,12 +13,12 @@ import (
 )
 
 type weatherHandler struct {
-	weather weather.Weather
+	weather *weather.Weather
 }
 
 func NewWeatherHandler(r *chi.Mux, weather *weather.Weather) {
 	weatherHandler := weatherHandler{
-		weather: *weather,
+		weather: weather,
 	}
 	r.Post("/get-weather", weatherHandler.GetWeather)
 }

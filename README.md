@@ -17,7 +17,7 @@ The following make command will create the migration files.
 We have to provide name for the migration file.
 
 ```shell
-make migrate-create NAME=create_user_table
+make migrate-create name=create_user_table
 
 /migrations/1690546735_create_user_table.up.sql
 /migrations/1690546735_create_user_table.down.sql
