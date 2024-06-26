@@ -29,6 +29,9 @@ type EnvVariables struct {
 	//gemini
 	GeminiApiKey string `required:"true" split_words:"true"`
 	GenModel     string `required:"true" split_words:"true"`
+
+	// Nearby places api credentials
+	PlacesAPIKey string `required:"true" split_words:"true"`
 }
 
 func NewEnvConfig() EnvVariables {
