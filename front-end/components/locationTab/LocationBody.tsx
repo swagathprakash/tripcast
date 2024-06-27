@@ -2,18 +2,42 @@ import { View, Text } from "react-native";
 import React from "react";
 import AttractionCard from "./AttractionCard";
 import { images } from "@/constants";
-
-const locationCards = [
-  { label: "Attractions", backgroundImage: images.attractionsCardBg },
-  { label: "Sights", backgroundImage: images.sightsCardBg },
-  { label: "Shopping", backgroundImage: images.shoppingCardBg },
-  { label: "Beach", backgroundImage: images.beachCardBg },
-  { label: "Heritage", backgroundImage: images.heritageCardBg },
-  { label: "Leisure", backgroundImage: images.leisureCardBg },
-  { label: "Entertainment", backgroundImage: images.entertainnmentCardBg },
-];
+import { useAppSelector } from "@/store";
 
 const LocationBody = () => {
+  const { places } = useAppSelector((state) => state.places);
+
+  const locationCards = [
+    places.location.attractions && {
+      label: "Attractions",
+      backgroundImage: images.attractionsCardBg,
+    },
+    places.location.sights && {
+      label: "Sights",
+      backgroundImage: images.sightsCardBg,
+    },
+    places.location.shopping && {
+      label: "Shopping",
+      backgroundImage: images.shoppingCardBg,
+    },
+    places.location.beach && {
+      label: "Beach",
+      backgroundImage: images.beachCardBg,
+    },
+    places.location.heritage && {
+      label: "Heritage",
+      backgroundImage: images.heritageCardBg,
+    },
+    places.location.leisure && {
+      label: "Leisure",
+      backgroundImage: images.leisureCardBg,
+    },
+    places.location.entertainment && {
+      label: "Entertainment",
+      backgroundImage: images.entertainnmentCardBg,
+    },
+  ].filter(Boolean);
+
   return (
     <>
       <View className="h-fit">

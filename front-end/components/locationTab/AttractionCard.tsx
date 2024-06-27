@@ -1,12 +1,16 @@
-import { View, Text, ImageBackground } from "react-native";
+import { View, Text, ImageBackground, Pressable } from "react-native";
 import React from "react";
+import { router } from "expo-router";
 
 const AttractionCard = ({ attractions }: any) => {
   return (
     <View className="">
       {attractions.map((item: any) => {
         return (
-          <View
+          <Pressable
+            onPress={() => {
+              router.push(`/location-details?section=${item.label}`);
+            }}
             key={item.label}
             className="overflow-hidden rounded-md relative shadow-md shadow-black my-5"
           >
@@ -26,7 +30,7 @@ const AttractionCard = ({ attractions }: any) => {
                 {item.label}
               </Text>
             </ImageBackground>
-          </View>
+          </Pressable>
         );
       })}
     </View>

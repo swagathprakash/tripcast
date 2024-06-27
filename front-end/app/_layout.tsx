@@ -11,6 +11,10 @@ const Rootlayout = () => {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="authentication" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="location-details"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </Provider>
   );
