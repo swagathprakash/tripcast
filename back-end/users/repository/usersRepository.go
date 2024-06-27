@@ -9,6 +9,8 @@ import (
 	"strings"
 	"trip-cast/domain"
 	"trip-cast/internal/utils"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type usersRepository struct {
@@ -34,7 +36,7 @@ const (
 		mobile_number = $1;
 	`
 	queryInsertToUsers = `
-	INSERT INTO users (%s) VALUES %s;
+	INSERT INTO users (%s) VALUES %s RETURNING user_id;
 	`
 )
 
@@ -73,8 +75,8 @@ func (r *usersRepository) GetUserDetails(ctx context.Context, mobileNumber strin
 	return &users, nil
 }
 
-func (r *usersRepository) Register(ctx context.Context, userData domain.UsersDTO) error {
-
+func (r *usersRepository) Register(ctx context.Context, userData domain.UsersDTO) (uint64, error) {
+	var userID pgtype.Int8
 	params := []any{
 		userData.FirstName,
 		userData.LastName,
@@ -84,9 +86,9 @@ func (r *usersRepository) Register(ctx context.Context, userData domain.UsersDTO
 	placeHolders := utils.GeneratePlaceHolders(len(params), 1)
 
 	query := fmt.Sprintf(queryInsertToUsers, strings.Join(columsToInsert, ","), placeHolders)
-	_, err := r.db.ExecContext(ctx, query, params...)
+	err := r.db.QueryRowContext(ctx, query, params...).Scan(&userID)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return uint64(userID.Int64), nil
 }

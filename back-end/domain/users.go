@@ -11,12 +11,12 @@ type Users struct {
 
 type UsersRepository interface {
 	GetUserDetails(ctx context.Context, mobileNumber string) (*Users, error)
-	Register(ctx context.Context, userData UsersDTO) error
+	Register(ctx context.Context, userData UsersDTO) (uint64, error)
 }
 
 type UsersUsecase interface {
 	GetUserDetails(ctx context.Context, mobileNumber string) (*Users, error)
 	GenerateOTP(mobileNumber string) error
 	VerifyOTP(ctx context.Context, mobileNumber string, otp int) (*Users, error)
-	Register(ctx context.Context, userData UsersDTO) error
+	Register(ctx context.Context, userData UsersDTO) (uint64, error)
 }

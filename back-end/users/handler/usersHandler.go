@@ -98,7 +98,7 @@ func (h *usersHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.usersUsecase.Register(r.Context(), userData)
+	userID, err := h.usersUsecase.Register(r.Context(), userData)
 	if err != nil {
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
 			Code:    http.StatusInternalServerError,
@@ -106,7 +106,10 @@ func (h *usersHandler) Register(w http.ResponseWriter, r *http.Request) {
 		}})
 		return
 	}
-	api.Success(w, http.StatusOK, "")
+	response := domain.UserRegisterResponse{
+		UserID: userID,
+	}
+	api.Success(w, http.StatusOK, response)
 }
 
 func (h *usersHandler) GenerateOTP(w http.ResponseWriter, r *http.Request) {

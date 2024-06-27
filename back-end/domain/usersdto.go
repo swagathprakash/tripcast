@@ -12,6 +12,10 @@ type OTPRequest struct {
 	Phone string `json:"phone"`
 }
 
+type UserRegisterResponse struct {
+	UserID uint64 `json:"user_id"`
+}
+
 type OTPVerifiedResponse struct {
 	Verified    bool     `json:"verified"`
 	UserPresent bool     `json:"user_present"`
