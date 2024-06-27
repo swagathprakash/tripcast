@@ -9,16 +9,16 @@ import (
 	"trip-cast/internal/database"
 	"trip-cast/internal/env"
 	"trip-cast/internal/gemini"
-	"trip-cast/internal/places"
+	"trip-cast/internal/location"
 	"trip-cast/internal/sms"
 	"trip-cast/internal/weather"
 	"trip-cast/middlewares"
+	placesHandler "trip-cast/nearbyplaces/handler"
+	placesUsecase "trip-cast/nearbyplaces/usecase"
 	usersHandler "trip-cast/users/handler"
 	usersRepository "trip-cast/users/repository"
 	usersUsecase "trip-cast/users/usecase"
 	weatherHandler "trip-cast/weather/handler"
-	placesUsecase "trip-cast/nearbyplaces/usecase"
-	placesHandler "trip-cast/nearbyplaces/handler"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -51,22 +51,22 @@ func main() {
 	r.Use(corsHandler)
 
 	// setup services
-	sms := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
-	w := weather.NewWeatherService()
-	model := gemini.NewGeminiService(ctx, env.GeminiApiKey, env.GenModel)
-	places := places.NewNearByPlacesAPI(env.PlacesAPIKey)
+	smsService := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
+	weatherService := weather.NewWeatherService()
+	geminiService := gemini.NewGeminiService(ctx, env.GeminiApiKey, env.GenModel)
+	locationService := location.NewLocationService(env.PlacesAPIKey)
 
 	// setup handlers
 	ur := usersRepository.NewUsersRepository(db)
-	uu := usersUsecase.NewUsersUsecase(ur, sms)
+	uu := usersUsecase.NewUsersUsecase(ur, smsService)
 	usersHandler.NewUsersHandler(r, uu)
 
-	weatherHandler.NewWeatherHandler(r, w)
-	
-	pu := placesUsecase.NewNearbyPlacesUsecase(places)
+	weatherHandler.NewWeatherHandler(r, weatherService, locationService)
+
+	pu := placesUsecase.NewNearbyPlacesUsecase(locationService)
 	placesHandler.NewNearByPlacesHandler(r, pu)
 
-	chatBothandler.NewChatBotHandler(r, model)
+	chatBothandler.NewChatBotHandler(r, geminiService)
 
 	// start server
 	log.Println("Server started")

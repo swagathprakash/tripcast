@@ -31,8 +31,8 @@ func getWeatherParams(params Params) openmeteo.Parameter {
 
 	weatherParams := openmeteo.Parameter{}
 
-	weatherParams.Latitude = &params.Latitude
-	weatherParams.Longitude = &params.Longitude
+	weatherParams.Latitude = openmeteo.Float32(float32(params.Latitude))
+	weatherParams.Longitude = openmeteo.Float32(float32(params.Longitude))
 	weatherParams.StartDate = &params.StartDate
 	weatherParams.EndDate = &params.EndDate
 	weatherParams.Timezone = &constants.TimeZoneAsiaKolkata
