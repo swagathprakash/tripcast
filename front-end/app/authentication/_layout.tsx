@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import SignIn from "@/components/authentication/signIn";
 import Logo from "@/components/Logo";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getLocationWeather } from "@/store/slice/locationSlice";
 import { router } from "expo-router";
 import { storeData } from "@/libs/utils";
+import { getLocationWeather, setLocation as setLocationSlice } from "@/store/slice/locationSlice";
 
 const AuthLayout = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [location, setLocation] = useState<any>();
-  const useAppDispatch = () => useDispatch<AppDispatch>();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -38,7 +37,13 @@ const AuthLayout = () => {
   }, []);
 
   useEffect(() => {
-    location &&
+    if (location) {
+      dispatch(
+        setLocationSlice({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        })
+      );
       dispatch(
         getLocationWeather({
           latitude: location.coords.latitude,
@@ -47,6 +52,7 @@ const AuthLayout = () => {
           end_date: new Date().toISOString().slice(0, 10),
         })
       );
+    }
   }, [dispatch, location]);
 
   return (
