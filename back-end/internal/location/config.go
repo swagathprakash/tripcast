@@ -1,4 +1,4 @@
-package places
+package location
 
 import "encoding/json"
 
@@ -82,4 +82,17 @@ type PlacesResponse struct {
 type NearByPlaceRequestBody struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
+}
+
+type LocationDetailsResponse struct {
+	Result []struct {
+		Name     string `json:"name"`
+		Country  string `json:"country"`
+		State    string `json:"state"`
+		District string `json:"state_district"`
+		County   string `json:"county"`
+		City     string `json:"city"`
+		Postcode string `json:"postcode"`
+		Address  string `json:"formatted"`
+	} `json:"results"`
 }

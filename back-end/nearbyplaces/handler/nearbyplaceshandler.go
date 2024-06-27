@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"trip-cast/constants"
 	"trip-cast/internal/api"
-	"trip-cast/internal/places"
+	"trip-cast/internal/location"
 	"trip-cast/nearbyplaces/usecase"
 
 	"github.com/go-chi/chi/v5"
@@ -25,7 +25,7 @@ func NewNearByPlacesHandler(r *chi.Mux, nearbyUsecase *usecase.NearByPlacesUseca
 
 func (h *NearByPlacesHandler) CallAPI(w http.ResponseWriter, r *http.Request) {
 
-	var request places.NearByPlaceRequestBody
+	var request location.NearByPlaceRequestBody
 
 	json.NewDecoder(r.Body).Decode(&request)
 

@@ -23,6 +23,7 @@ const (
 	TwillioAPIEndPoint           = "https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json"
 	OTPMessage                   = "The OTP is : %d"
 	PlacesAPIEndPoint            = "https://api.geoapify.com/v2/places"
+	LocationDetailEndPoint       = "https://api.geoapify.com/v1/geocode/reverse"
 	Radius                       = 10000
 )
 

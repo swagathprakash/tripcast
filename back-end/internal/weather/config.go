@@ -3,16 +3,16 @@ package weather
 import "github.com/innotechdevops/openmeteo"
 
 type Params struct {
-	Latitude     float32
-	Longitude    float32
+	Latitude     float64
+	Longitude    float64
 	StartDate    string
 	EndDate      string
 	ForeCastDays int
 }
 
 type RequestParams struct {
-	Latitude     float32 `json:"latitude"`
-	Longitude    float32 `json:"longitude"`
+	Latitude     float64 `json:"latitude"`
+	Longitude    float64 `json:"longitude"`
 	StartDate    string  `json:"start_date"`
 	EndDate      string  `json:"end_date"`
 	ForeCastDays int     `json:"forecast_days"`
@@ -42,13 +42,19 @@ var requiredDailyData = []string{
 type WeatherResponse struct {
 	Latitude       float64 `json:"latitude"`
 	Longitude      float64 `json:"longitude"`
+	City           string  `json:"city"`
+	District       string  `json:"district"`
+	State          string  `json:"state"`
 	CurrentWeather struct {
-		Time          string  `json:"time"`
-		Temperature   float64 `json:"temperature"`
-		WindSpeed     float64 `json:"windspeed"`
-		IsDay         int     `json:"is_day"`
-		WeatherCode   int     `json:"weathercode"`
-		WeatherDetail string  `json:"weather_detail"`
+		Time                string  `json:"time"`
+		Temperature         float64 `json:"temperature"`
+		ApparentTemperature float64 `json:"apparent_temperature"`
+		RelativeHumidity    int     `json:"relativehumidity"`
+		Rain                float64 `json:"rain"`
+		WindSpeed           float64 `json:"windspeed"`
+		IsDay               int     `json:"is_day"`
+		WeatherCode         int     `json:"weathercode"`
+		WeatherDetail       string  `json:"weather_detail"`
 	} `json:"current_weather"`
 	Hourly struct {
 		Time                []string  `json:"time"`
@@ -145,7 +151,7 @@ var WMOCodesMap = map[int]string{
 	75: "Continuous heavy snow",
 	80: "Light showers",
 	81: "Moderate showers",
-	82: "Heavy showers",	
+	82: "Heavy showers",
 	83: "Light showers snow",
 	84: "Moderate showers snow",
 	85: "Heavy showers snow",

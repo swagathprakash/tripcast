@@ -4,22 +4,22 @@ import (
 	"log"
 	"slices"
 	"trip-cast/constants"
-	"trip-cast/internal/places"
+	"trip-cast/internal/location"
 	"trip-cast/internal/utils"
 )
 
 type NearByPlacesUsecase struct {
-	placesAPI *places.NearByPlaces
+	placesAPI *location.Location
 }
 
-func NewNearbyPlacesUsecase(placesAPI *places.NearByPlaces) *NearByPlacesUsecase {
+func NewNearbyPlacesUsecase(placesAPI *location.Location) *NearByPlacesUsecase {
 	return &NearByPlacesUsecase{
 		placesAPI: placesAPI,
 	}
 }
 
-func (u *NearByPlacesUsecase) GetNearByPlaces(longitude, latitude float64) (*places.CategorizedPlaces, error) {
-	params := places.PlacesRequestParams{
+func (u *NearByPlacesUsecase) GetNearByPlaces(longitude, latitude float64) (*location.CategorizedPlaces, error) {
+	params := location.PlacesRequestParams{
 		Longitude:  longitude,
 		Latitude:   latitude,
 		Categories: constants.NearbyPlacesCategories,
@@ -35,11 +35,11 @@ func (u *NearByPlacesUsecase) GetNearByPlaces(longitude, latitude float64) (*pla
 	return &catogorizedPlaces, nil
 }
 
-func classifyTheResponse(placesResponse []places.Features) places.CategorizedPlaces {
-	sights, shopping, beach, heritage, leisure, entertainment, attractions, hotels, food, tradition := make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0), make([]places.PlacesResponse, 0)
+func classifyTheResponse(placesResponse []location.Features) location.CategorizedPlaces {
+	sights, shopping, beach, heritage, leisure, entertainment, attractions, hotels, food, tradition := make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0), make([]location.PlacesResponse, 0)
 
 	for _, place := range placesResponse {
-		placeResponse := places.PlacesResponse{
+		placeResponse := location.PlacesResponse{
 			Name:       place.Properties.Name,
 			City:       place.Properties.City,
 			Longitude:  place.Properties.Longitude,
@@ -79,7 +79,7 @@ func classifyTheResponse(placesResponse []places.Features) places.CategorizedPla
 		}
 	}
 
-	locationType := places.LocationTypePlaces{
+	locationType := location.LocationTypePlaces{
 		Attractions:   attractions,
 		Sights:        sights,
 		Shopping:      shopping,
@@ -89,7 +89,7 @@ func classifyTheResponse(placesResponse []places.Features) places.CategorizedPla
 		Entertainment: entertainment,
 	}
 
-	response := places.CategorizedPlaces{
+	response := location.CategorizedPlaces{
 		Location:  locationType,
 		Hotels:    hotels,
 		Food:      food,
