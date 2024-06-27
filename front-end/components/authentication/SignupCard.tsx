@@ -9,10 +9,13 @@ import React, { useState } from "react";
 import { router } from "expo-router";
 import axios from "axios";
 import { endpoints } from "@/constants";
+import { useDispatch } from "react-redux";
+import { authenticateUser } from "@/store/slice/authSlice";
 
-const registerUrl = endpoints.BACKEND_URL+"/register";
+const registerUrl = endpoints.BACKEND_URL + "/register";
 
 const SignupCard = ({ otp, number }: { otp: string; number: string }) => {
+  const dispatch = useDispatch();
   const [user, setUser] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -29,7 +32,7 @@ const SignupCard = ({ otp, number }: { otp: string; number: string }) => {
       })
       .then((value) => {
         setIsLoading(false);
-        router.push("/home");
+        dispatch(authenticateUser({ phone: number }));
       })
       .catch((err) => {
         console.log(err);
