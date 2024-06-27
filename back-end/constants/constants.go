@@ -10,6 +10,7 @@ var (
 	ErrOTPNotMatched       = errors.New("OTP is not matched")
 	ErrBadRequest          = errors.New("request body is invalid")
 	ErrInternalServerError = errors.New("an internal server error occured")
+	ErrNotFound            = errors.New("cannot find the requested resource")
 
 	ErrLatitudeLongitudeRequired = errors.New("latitude/longitude is required")
 	ErrValidDateFormat           = errors.New("valid format for start_date/end_date is 'YYYY-MM-DD'")

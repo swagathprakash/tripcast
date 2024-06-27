@@ -23,7 +23,7 @@ func NewUsersHandler(r *chi.Mux, usersUsecase domain.UsersUsecase) {
 	r.Get("/get-otp", usersHandler.GenerateOTP)
 	r.Post("/verify-otp", usersHandler.VerifyOTP)
 	r.Post("/register", usersHandler.Register)
-
+	r.Get("/users", usersHandler.GetUserDetails)
 }
 
 func (h *usersHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +32,7 @@ func (h *usersHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("failed to decode request")
 		api.Fail(w, http.StatusBadRequest, []api.Errors{{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: constants.ErrBadRequest.Error(),
 		}})
 		return
@@ -41,27 +41,27 @@ func (h *usersHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, constants.ErrOTPNotGenerated) {
 			api.Fail(w, http.StatusNotFound, []api.Errors{{
-				Code: http.StatusNotFound,
+				Code:    http.StatusNotFound,
 				Message: constants.ErrOTPNotGenerated.Error(),
 			}})
 			return
 		}
 		if errors.Is(err, constants.ErrOTPExpired) {
 			api.Fail(w, http.StatusGone, []api.Errors{{
-				Code: http.StatusGone,
+				Code:    http.StatusGone,
 				Message: constants.ErrOTPExpired.Error(),
 			}})
 			return
 		}
 		if errors.Is(err, constants.ErrOTPNotMatched) {
 			api.Fail(w, http.StatusUnauthorized, []api.Errors{{
-				Code: http.StatusGone,
+				Code:    http.StatusGone,
 				Message: constants.ErrOTPNotMatched.Error(),
 			}})
 			return
 		}
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
-			Code: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
 			Message: constants.ErrInternalServerError.Error(),
 		}})
 		return
@@ -92,7 +92,7 @@ func (h *usersHandler) Register(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&userData)
 	if err != nil {
 		api.Fail(w, http.StatusBadRequest, []api.Errors{{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: constants.ErrBadRequest.Error(),
 		}})
 		return
@@ -101,7 +101,7 @@ func (h *usersHandler) Register(w http.ResponseWriter, r *http.Request) {
 	err = h.usersUsecase.Register(r.Context(), userData)
 	if err != nil {
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
-			Code: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
 			Message: constants.ErrInternalServerError.Error(),
 		}})
 		return
@@ -113,7 +113,7 @@ func (h *usersHandler) GenerateOTP(w http.ResponseWriter, r *http.Request) {
 	mobileNumber := r.URL.Query().Get("phone")
 	if len(mobileNumber) < constants.NumberOfDigitsInMobileNumber {
 		api.Fail(w, http.StatusBadRequest, []api.Errors{{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: constants.ErrInvalidMobileNumber.Error(),
 		}})
 		return
@@ -121,10 +121,43 @@ func (h *usersHandler) GenerateOTP(w http.ResponseWriter, r *http.Request) {
 	err := h.usersUsecase.GenerateOTP(mobileNumber)
 	if err != nil {
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
-			Code: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
 			Message: constants.ErrInternalServerError.Error(),
 		}})
 		return
 	}
 	api.Success(w, http.StatusOK, "")
+}
+
+func (h *usersHandler) GetUserDetails(w http.ResponseWriter, r *http.Request) {
+
+	var response domain.UsersDTO
+	mobileNumber := r.URL.Query().Get("phone")
+	if len(mobileNumber) == 0 {
+		api.Fail(w, http.StatusBadRequest, []api.Errors{{
+			Code:    http.StatusBadRequest,
+			Message: constants.ErrBadRequest.Error(),
+		}})
+		return
+	}
+
+	userDetails, err := h.usersUsecase.GetUserDetails(r.Context(), mobileNumber)
+	if err != nil {
+		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
+			Code:    http.StatusInternalServerError,
+			Message: constants.ErrInternalServerError.Error(),
+		}})
+		return
+	}
+	if userDetails == nil {
+		api.Fail(w, http.StatusNotFound, []api.Errors{{
+			Code:    http.StatusNotFound,
+			Message: constants.ErrNotFound.Error(),
+		}})
+		return
+	}
+
+	response.MapFromDomain(userDetails)
+
+	api.Success(w, http.StatusOK, response)
 }
