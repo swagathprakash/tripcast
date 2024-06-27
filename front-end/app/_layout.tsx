@@ -15,6 +15,10 @@ const Rootlayout = () => {
           name="location-details"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="itenary-day"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </Provider>
   );
