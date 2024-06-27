@@ -28,9 +28,9 @@ const TabIcon = ({ icon, color, focused, name }: any) => {
 
 const TabLayout = () => {
   return (
-    <SafeAreaView className="h-full bg-white">
+    <SafeAreaView className="flex-1 bg-slate-50">
       <ScrollView
-        contentContainerStyle={{ height: "100%", backgroundColor: "white" }}
+        contentContainerStyle={{ height: "100%", backgroundColor: "#f8fafc" }}
       >
         <Logo />
         <Tabs

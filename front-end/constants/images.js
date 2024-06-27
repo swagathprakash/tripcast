@@ -9,6 +9,7 @@ import heritageCardBg from "../assets/images/cardbackground/HeritageCardBG.jpg";
 import leisureCardBg from "../assets/images/cardbackground/LeisureCardBG.jpg";
 import shoppingCardBg from "../assets/images/cardbackground/ShoppingCardBG.jpg";
 import sightsCardBg from "../assets/images/cardbackground/SightsCardBG.jpg";
+import profileAvatar from "../assets/images/profileAvatar.png";
 
 export default {
   loginBackground,
@@ -22,4 +23,5 @@ export default {
   leisureCardBg,
   shoppingCardBg,
   sightsCardBg,
+  profileAvatar,
 };

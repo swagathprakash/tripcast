@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import ProfilePage from "@/components/profile/ProfilePage";
 
 const profile = () => {
   return (
-    <View className="w-full px-5 justify-start h-full">
-      <Text>profile</Text>
-    </View>
-  )
-}
+    <ScrollView className="flex-1 bg-slate-50 py-5">
+      <ProfilePage />
+    </ScrollView>
+  );
+};
 
-export default profile
+export default profile;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

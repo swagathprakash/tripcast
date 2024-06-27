@@ -1,8 +1,7 @@
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { Link, router } from "expo-router";
-import { images } from "./../constants"
+import { images } from "./../constants";
 import TextCarousel from "@/components/landing_page/TextCarousel";
 import Logo from "@/components/Logo";
 import CustomButton from "@/components/CustomButton";
@@ -32,5 +31,5 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     overflow: "hidden",
-  }
-})
+  },
+});
