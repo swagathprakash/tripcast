@@ -1,0 +1,10 @@
+BEGIN;
+
+SET
+    search_path TO tripcast;
+
+ALTER TABLE IF EXISTS notifications
+ADD COLUMN IF NOT EXISTS is_read BOOLEAN,
+ADD COLUMN IF NOT EXISTS created_at TIMESTAMP;
+
+COMMIT;
