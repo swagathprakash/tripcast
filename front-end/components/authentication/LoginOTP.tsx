@@ -7,8 +7,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
-import { router } from "expo-router";
 import { endpoints } from "@/constants";
+import { useDispatch } from "react-redux";
+import { authenticateUser } from "@/store/slice/authSlice";
 
 const verifyOtpUrl = endpoints.BACKEND_URL + "/verify-otp";
 
@@ -25,6 +26,7 @@ const LoginOTP = ({
 }) => {
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const verifyOtp = async (otp: string) => {
     setIsLoading(true);
@@ -39,12 +41,11 @@ const LoginOTP = ({
       return;
     }
     if (data?.data?.user_present) {
-      //setuser to the slice
-      router.push("/home");
+      dispatch(authenticateUser({ phone: number }));
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
     setNewUser(true);
-    console.log(data);
     setIsLoading(false);
     return data;
   };
@@ -90,7 +91,7 @@ const LoginOTP = ({
             if (otp.length !== 4) {
               setError(true);
             } else {
-              verifyOtpTemp(otp);
+              verifyOtp(otp);
             }
           }}
           activeOpacity={0.8}

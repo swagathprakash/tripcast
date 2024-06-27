@@ -8,13 +8,21 @@ import { StatusBar } from "expo-status-bar";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getLocationWeather } from "@/store/slice/locationSlice";
-
+import { router } from "expo-router";
+import { storeData } from "@/libs/utils";
 
 const AuthLayout = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [location, setLocation] = useState<any>();
   const useAppDispatch = () => useDispatch<AppDispatch>();
-	const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (user) {
+      storeData(user.phone);
+      router.push("/home");
+    }
+  }, [user]);
 
   const getPermissions = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -30,14 +38,17 @@ const AuthLayout = () => {
   }, []);
 
   useEffect(() => {
-		location && dispatch(getLocationWeather({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      start_date: new Date().toISOString().slice(0, 10),
-      end_date: new Date().toISOString().slice(0, 10),
-    }));
-	}, [ dispatch, location ]);
-  
+    location &&
+      dispatch(
+        getLocationWeather({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          start_date: new Date().toISOString().slice(0, 10),
+          end_date: new Date().toISOString().slice(0, 10),
+        })
+      );
+  }, [dispatch, location]);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Logo skip={true} />
