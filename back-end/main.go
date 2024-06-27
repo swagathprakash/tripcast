@@ -15,6 +15,9 @@ import (
 	"trip-cast/middlewares"
 	placesHandler "trip-cast/nearbyplaces/handler"
 	placesUsecase "trip-cast/nearbyplaces/usecase"
+	notificationHandler "trip-cast/notifications/handler"
+	notificationRepository "trip-cast/notifications/repository"
+	notificationUsecase "trip-cast/notifications/usecase"
 	usersHandler "trip-cast/users/handler"
 	usersRepository "trip-cast/users/repository"
 	usersUsecase "trip-cast/users/usecase"
@@ -67,6 +70,11 @@ func main() {
 	placesHandler.NewNearByPlacesHandler(r, pu)
 
 	chatBothandler.NewChatBotHandler(r, geminiService)
+
+	// notification handler
+	nr := notificationRepository.NewNotificationRepository(db)
+	nu := notificationUsecase.NewNotificationUsecase(nr)
+	notificationHandler.NewNotificationHandler(r, nu)
 
 	// start server
 	log.Println("Server started")
