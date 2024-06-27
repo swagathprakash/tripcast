@@ -40,9 +40,9 @@ const TabLayout = () => {
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true,
             tabBarActiveTintColor: "white",
-            tabBarInactiveTintColor: "#827F75",
+            tabBarInactiveTintColor: "#4b5563",
             tabBarStyle: {
-              backgroundColor: "#161622",
+              backgroundColor: "black",
               borderTopWidth: 1,
               borderTopColor: "#232533",
               height: 64,
