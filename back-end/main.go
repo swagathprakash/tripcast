@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	chatBothandler "trip-cast/chatbot/handler"
+	chatBotusecase "trip-cast/chatbot/usecase"
 	"trip-cast/internal/database"
 	"trip-cast/internal/env"
 	"trip-cast/internal/gemini"
@@ -22,6 +23,7 @@ import (
 	usersRepository "trip-cast/users/repository"
 	usersUsecase "trip-cast/users/usecase"
 	weatherHandler "trip-cast/weather/handler"
+	weatherUsecase "trip-cast/weather/usecase"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -64,12 +66,14 @@ func main() {
 	uu := usersUsecase.NewUsersUsecase(ur, smsService)
 	usersHandler.NewUsersHandler(r, uu)
 
-	weatherHandler.NewWeatherHandler(r, weatherService, locationService)
+	wu := weatherUsecase.NewWeatherUsecase(locationService)
+	weatherHandler.NewWeatherHandler(r, weatherService, wu)
 
 	pu := placesUsecase.NewNearbyPlacesUsecase(locationService)
 	placesHandler.NewNearByPlacesHandler(r, pu)
 
-	chatBothandler.NewChatBotHandler(r, geminiService)
+	cu := chatBotusecase.NewUsersUsecase(weatherService, wu)
+	chatBothandler.NewChatBotHandler(r, geminiService, cu)
 
 	// notification handler
 	nr := notificationRepository.NewNotificationRepository(db)
