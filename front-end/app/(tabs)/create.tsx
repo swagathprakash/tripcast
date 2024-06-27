@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import ItenaryDetails from "@/components/itenary/itenary-details";
 
 const create = () => {
   return (
-    <View className="w-full px-5 justify-start h-full">
-      <Text>create</Text>
-    </View>
-  )
-}
+    <ScrollView className=" bg-slate-50">
+      <ItenaryDetails />
+    </ScrollView>
+  );
+};
 
-export default create
+export default create;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

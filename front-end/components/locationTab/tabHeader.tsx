@@ -1,6 +1,5 @@
 import { View, Text, Pressable } from "react-native";
 import React, { SetStateAction } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 
 const TabHeader = ({
   sections,
