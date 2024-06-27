@@ -11,6 +11,10 @@ type NotificationsDTO struct {
 	CreatedAt      time.Time `json:"created_at"`
 }
 
+type NotificationModifyRequest struct {
+	NotificationID uint64 `json:"notification_id"`
+}
+
 func (dto *NotificationsDTO) MapFromDomain(domain Notifications) {
 	dto.NotificationID = domain.NotificationID
 	dto.Content = domain.Content
