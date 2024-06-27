@@ -5,11 +5,12 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import SignIn from "@/components/authentication/signIn";
 import Logo from "@/components/Logo";
 import { StatusBar } from "expo-status-bar";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
 import { router } from "expo-router";
 import { storeData } from "@/libs/utils";
 import { getLocationWeather, setLocation as setLocationSlice } from "@/store/slice/locationSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+
 
 const AuthLayout = () => {
   const { user } = useAppSelector((state) => state.auth);
