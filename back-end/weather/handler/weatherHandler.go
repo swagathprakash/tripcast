@@ -104,7 +104,7 @@ func (h weatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	addAdditionalWeatherDetails(&response, locationResponse)
+	err = addAdditionalWeatherDetails(&response, locationResponse)
 	if err != nil {
 		log.Printf("addAdditionalWeatherDetails failed with error: %s", err.Error())
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
@@ -129,9 +129,12 @@ func addAdditionalWeatherDetails(response *weather.WeatherResponse, locationDeta
 	response.CurrentWeather.WeatherDetail = weather.WMOCodesMap[response.CurrentWeather.WeatherCode]
 	response.City = locationDetails.Result[0].City
 	response.State = locationDetails.Result[0].State
+	response.District = locationDetails.Result[0].District
+	if len(strings.Split(locationDetails.Result[0].District, " ")) > 1 {
+		response.District = strings.Split(locationDetails.Result[0].District, " ")[0]
+	}
 	lenHourlyWeather := len(response.Hourly.WeatherCode)
 	lenDailyWeather := len(response.Daily.WeatherCode)
-
 	location, err := time.LoadLocation(constants.TimeZoneAsiaKolkata)
 	if err != nil {
 		return err
@@ -140,11 +143,6 @@ func addAdditionalWeatherDetails(response *weather.WeatherResponse, locationDeta
 	response.CurrentWeather.ApparentTemperature = response.Hourly.ApparentTemperature[currentHour]
 	response.CurrentWeather.RelativeHumidity = response.Hourly.RelativeHumidity2M[currentHour]
 	response.CurrentWeather.Rain = response.Hourly.Rain[currentHour]
-
-	response.District = locationDetails.Result[0].District
-	if len(strings.Split(locationDetails.Result[0].District, " ")) > 1 {
-		response.District = strings.Split(locationDetails.Result[0].District, " ")[0]
-	}
 
 	for i := 0; i < lenHourlyWeather; i++ {
 		hourlyWeatherCode := response.Hourly.WeatherCode[i]

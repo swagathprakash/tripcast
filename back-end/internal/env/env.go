@@ -50,7 +50,7 @@ func NewEnvConfig() EnvVariables {
 
 	err = envconfig.Process("", &env)
 	if err != nil {
-		log.Println(err)
+		log.Fatalf("Error processing .env.sample file %s", err.Error())
 	}
 
 	return env
