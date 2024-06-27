@@ -26,7 +26,7 @@ const ProfilePage = () => {
               Personal Details
             </Text>
             <Pressable className="  px-2  bg-white ml-10">
-              <Text className="text-semibold tracking-tighter text-gray-500">
+              <Text className="font-medium tracking-tighter text-gray-500">
                 Edit
               </Text>
             </Pressable>
