@@ -25,8 +25,8 @@ func NewUsersUsecase(userRepo domain.UsersRepository, sms *sms.SMS) domain.Users
 }
 
 type otpInfo struct {
-	otp       int
-	exp       time.Time
+	otp int
+	exp time.Time
 }
 
 var otpMap = make(map[string]otpInfo)
@@ -41,7 +41,7 @@ func (u *usersUsecase) GetUserDetails(ctx context.Context, mobileNumber string) 
 }
 
 func (u *usersUsecase) GenerateOTP(mobileNumber string) error {
-	
+
 	// uncomment the code for OTP generation
 	// otp := rand.Intn(constants.MaxValueOfOTP-constants.MinValueOfOTP+1) + constants.MinValueOfOTP
 	// mobileNumberWithInidanCountryCode := utils.ConvertToIndianMobileNumberFormat(mobileNumber)
@@ -50,7 +50,7 @@ func (u *usersUsecase) GenerateOTP(mobileNumber string) error {
 	// 	log.Println("failed to sent otp with error", err)
 	// 	return err
 	// }
-	
+
 	otpMap[mobileNumber] = otpInfo{
 		otp: 1234,
 		exp: time.Now().Add(2 * time.Minute),
@@ -83,12 +83,12 @@ func (u *usersUsecase) VerifyOTP(ctx context.Context, mobileNumber string, otp i
 	return userData, err
 }
 
-func (u *usersUsecase) Register(ctx context.Context, userData domain.UsersDTO) error {
+func (u *usersUsecase) Register(ctx context.Context, userData domain.UsersDTO) (uint64, error) {
 
-	err := u.userRepo.Register(ctx, userData)
+	userID, err := u.userRepo.Register(ctx, userData)
 	if err != nil {
 		log.Println("failed to store user data with error", err)
-		return err
+		return 0, err
 	}
-	return nil
+	return userID, nil
 }
