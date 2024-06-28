@@ -7,6 +7,7 @@ import (
 )
 
 type Trip struct {
+	TripID           int64
 	UserID           int64
 	StartingLocation string
 	Destination      string
@@ -19,13 +20,14 @@ type Trip struct {
 	Forecast         json.RawMessage
 	PackingItems     []string
 	SafetyTips       []string
-	Saved            bool
 }
 
 type TripsRepository interface {
 	InsertTripDetails(ctx context.Context, trip Trip) (uint64, error)
+	GetTripDetails(ctx context.Context, params TripRequestParams) ([]Trip, error)
 }
 
 type TripsUsecase interface {
 	InsertTripDetails(ctx context.Context, data TripsDTO) (uint64, error)
+	FetchTrips(ctx context.Context, params TripRequestParams) ([]Trip, error)
 }

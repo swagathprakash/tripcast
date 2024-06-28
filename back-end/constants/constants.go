@@ -14,6 +14,8 @@ var (
 
 	ErrLatitudeLongitudeRequired = errors.New("latitude/longitude is required")
 	ErrValidDateFormat           = errors.New("valid format for start_date/end_date is 'YYYY-MM-DD'")
+
+	ErrTripsNotFound = errors.New("no trip details are found")
 )
 
 const (

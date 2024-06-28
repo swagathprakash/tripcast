@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 	"trip-cast/constants"
 	"trip-cast/domain"
 	"trip-cast/internal/api"
+	"trip-cast/internal/gemini"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -19,7 +21,8 @@ func NewTripsHandler(r *chi.Mux, tripsUsecase domain.TripsUsecase) {
 	tripsHandler := &tripsHandler{
 		tripsUsecase: tripsUsecase,
 	}
-	r.Post("/save-trip", tripsHandler.SaveTrip)
+	r.Post("/trip", tripsHandler.SaveTrip)
+	r.Get("/trip", tripsHandler.FetchTrips)
 }
 
 func (h *tripsHandler) SaveTrip(w http.ResponseWriter, r *http.Request) {
@@ -47,35 +50,51 @@ func (h *tripsHandler) SaveTrip(w http.ResponseWriter, r *http.Request) {
 	api.Success(w, http.StatusOK, tripId)
 }
 
-// func (h *usersHandler) GetUserDetails(w http.ResponseWriter, r *http.Request) {
+func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 
-// 	var response domain.UsersDTO
-// 	mobileNumber := r.URL.Query().Get("phone")
-// 	if len(mobileNumber) == 0 {
-// 		api.Fail(w, http.StatusBadRequest, []api.Errors{{
-// 			Code:    http.StatusBadRequest,
-// 			Message: constants.ErrBadRequest.Error(),
-// 		}})
-// 		return
-// 	}
+	responses := domain.TripsResponse{}
+	params := domain.TripRequestParams{}
 
-// 	userDetails, err := h.usersUsecase.GetUserDetails(r.Context(), mobileNumber)
-// 	if err != nil {
-// 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
-// 			Code:    http.StatusInternalServerError,
-// 			Message: constants.ErrInternalServerError.Error(),
-// 		}})
-// 		return
-// 	}
-// 	if userDetails == nil {
-// 		api.Fail(w, http.StatusNotFound, []api.Errors{{
-// 			Code:    http.StatusNotFound,
-// 			Message: constants.ErrNotFound.Error(),
-// 		}})
-// 		return
-// 	}
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		api.Fail(w, http.StatusBadRequest, []api.Errors{{
+			Code:    http.StatusBadRequest,
+			Message: constants.ErrBadRequest.Error(),
+		}})
+		return
+	}
 
-// 	response.MapFromDomain(userDetails)
+	trips, err := h.tripsUsecase.FetchTrips(r.Context(), params)
+	if err != nil {
+		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
+			Code:    http.StatusInternalServerError,
+			Message: constants.ErrInternalServerError.Error(),
+		}})
+		return
+	}
+	if trips == nil {
+		api.Fail(w, http.StatusNotFound, []api.Errors{{
+			Code:    http.StatusNotFound,
+			Message: constants.ErrTripsNotFound.Error(),
+		}})
+		return
+	}
 
-// 	api.Success(w, http.StatusOK, response)
-// }
+	for _, trip := range trips {
+		response := gemini.Response{}
+		trip.MapFromDomain(&response)
+
+		if params.TripID != 0 {
+			responses.Trip = &response
+			break
+		}
+		// seperate finished and upcomming trips
+		if trip.EndDate.After(time.Now()) {
+			responses.Finished = append(responses.Finished, response)
+			continue
+		}
+		responses.Upcoming = append(responses.Upcoming, response)
+	}
+
+	api.Success(w, http.StatusOK, responses)
+}

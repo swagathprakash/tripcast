@@ -19,14 +19,14 @@ func NewTripsUsecase(tripsRepo domain.TripsRepository) domain.TripsUsecase {
 	}
 }
 
-// func (u *usersUsecase) GetUserDetails(ctx context.Context, mobileNumber string) (*domain.Users, error) {
-// 	users, err := u.userRepo.GetUserDetails(ctx, mobileNumber)
-// 	if err != nil {
-// 		log.Println("failed to get user details with error %w", err)
-// 		return nil, err
-// 	}
-// 	return users, nil
-// }
+func (u *tripsUsecase) FetchTrips(ctx context.Context, params domain.TripRequestParams) ([]domain.Trip, error) {
+	trips, err := u.tripsRepo.GetTripDetails(ctx, params)
+	if err != nil {
+		log.Println("failed to get trip details with error %w", err)
+		return nil, err
+	}
+	return trips, nil
+}
 
 func (u *tripsUsecase) InsertTripDetails(ctx context.Context, tripData domain.TripsDTO) (uint64, error) {
 
@@ -35,22 +35,22 @@ func (u *tripsUsecase) InsertTripDetails(ctx context.Context, tripData domain.Tr
 	trip := domain.Trip{}
 	ParsedStartDate, err := time.Parse(constants.Datelayout, data.StartDate)
 	if err != nil {
-		log.Printf("parsing error", err.Error())
+		log.Printf("parsing error:%s", err.Error())
 		return 0, err
 	}
 	ParsedEndDate, err := time.Parse(constants.Datelayout, data.EndDate)
 	if err != nil {
-		log.Printf("parsing error", err.Error())
+		log.Printf("parsing error:%s", err.Error())
 		return 0, err
 	}
 	itenerary, err := json.Marshal(data.Itinerary)
 	if err != nil {
-		log.Printf("marshal error", err.Error())
+		log.Printf("marshal error:%s", err.Error())
 		return 0, err
 	}
 	forecast, err := json.Marshal(data.Forecast)
 	if err != nil {
-		log.Printf("marshal error", err.Error())
+		log.Printf("marshal error:%s", err.Error())
 		return 0, err
 	}
 
