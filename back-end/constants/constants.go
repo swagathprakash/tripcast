@@ -4,13 +4,14 @@ import "errors"
 
 // custom errors
 var (
-	ErrInvalidMobileNumber = errors.New("invalid mobile number")
-	ErrOTPNotGenerated     = errors.New("OTP for the number is not generated")
-	ErrOTPExpired          = errors.New("OTP is expired")
-	ErrOTPNotMatched       = errors.New("OTP is not matched")
-	ErrBadRequest          = errors.New("request body is invalid")
-	ErrInternalServerError = errors.New("an internal server error occured")
-	ErrNotFound            = errors.New("cannot find the requested resource")
+	ErrInvalidMobileNumber          = errors.New("invalid mobile number")
+	ErrOTPNotGenerated              = errors.New("OTP for the number is not generated")
+	ErrOTPExpired                   = errors.New("OTP is expired")
+	ErrOTPNotMatched                = errors.New("OTP is not matched")
+	ErrBadRequest                   = errors.New("request body is invalid")
+	ErrInternalServerError          = errors.New("an internal server error occured")
+	ErrNotFound                     = errors.New("cannot find the requested resource")
+	ErrBackgroundNotificationParams = errors.New("bad params for background notification service")
 
 	ErrLatitudeLongitudeRequired = errors.New("latitude/longitude is required")
 	ErrValidDateFormat           = errors.New("valid format for start_date/end_date is 'YYYY-MM-DD'")
@@ -28,6 +29,8 @@ const (
 	LocationDetailEndPoint       = "https://api.geoapify.com/v1/geocode/reverse"
 	Radius                       = 10000
 	Datelayout                   = "2006-01-02"
+	ChunkSize                    = 500
+	DateFormatForWeatherAPI      = "2006-01-02"
 )
 
 var (
@@ -106,3 +109,7 @@ var Sights = []string{
 	"tourism.sights",
 	"entertainment.zoo",
 }
+
+const(
+	NotificationContent = "We wanted to let you know that the weather conditions for your planned trip have changed. Please check the latest forecast for and change the itinerary if needed. Stay safe!"
+)

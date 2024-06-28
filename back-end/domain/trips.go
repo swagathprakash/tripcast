@@ -27,6 +27,7 @@ type Trip struct {
 type TripsRepository interface {
 	InsertTripDetails(ctx context.Context, trip Trip) (uint64, error)
 	GetTripDetails(ctx context.Context, params TripRequestParams) ([]Trip, error)
+	GetTripsInBatch(ctx context.Context, limit, offset int) ([]Trip, bool, error)
 }
 
 type TripsUsecase interface {

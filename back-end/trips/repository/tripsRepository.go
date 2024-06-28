@@ -46,6 +46,30 @@ const (
 	queryInsertToTrips = `
 	INSERT INTO trips (%s) VALUES %s RETURNING trip_id;
 	`
+
+	queryFetchTripBatches = `
+	SELECT
+		trip_id,
+		user_id,
+		start_location,
+		destination,
+		start_date,
+		end_date,
+		companions,
+		purpose,
+		itinerary,
+		forecast,
+		packing_items,
+		safety_tips,
+		latitude,
+		longitude
+	FROM
+		trips
+	ORDER BY
+		user_id
+	LIMIT $1
+	OFFSET $2;
+	`
 )
 
 const (
@@ -165,4 +189,53 @@ func (r *tripsRepository) InsertTripDetails(ctx context.Context, trip domain.Tri
 		return 0, err
 	}
 	return uint64(tripID.Int64), nil
+}
+
+func (r *tripsRepository) GetTripsInBatch(ctx context.Context, limit, offset int) ([]domain.Trip, bool, error) {
+
+	var (
+		trip        domain.Trip
+		trips       []domain.Trip
+		tripsDAO    domain.TripsDAO
+		hasMoreRows bool
+	)
+	rows, err := r.db.Query(ctx, queryFetchTripBatches, limit+1, offset)
+	if err != nil {
+		return nil, hasMoreRows, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(
+			&tripsDAO.TripID,
+			&tripsDAO.UserID,
+			&tripsDAO.StartingLocation,
+			&tripsDAO.Destination,
+			&tripsDAO.StartDate,
+			&tripsDAO.EndDate,
+			&tripsDAO.Companions,
+			&tripsDAO.Purpose,
+			&tripsDAO.Itinerary,
+			&tripsDAO.Forecast,
+			&tripsDAO.PackingItems,
+			&tripsDAO.SafetyTips,
+			&tripsDAO.Latitude,
+			&tripsDAO.Longitude,
+		)
+		if err != nil {
+			return nil, hasMoreRows, err
+		}
+		tripsDAO.MapToDomain(&trip)
+		trips = append(trips, trip)
+	}
+	if rows.Err() != nil {
+		return nil, hasMoreRows, rows.Err()
+	}
+
+	if len(trips) > limit {
+		hasMoreRows = true
+		trips = trips[:len(trips)-1]
+	}
+
+	return trips, hasMoreRows, nil
 }
