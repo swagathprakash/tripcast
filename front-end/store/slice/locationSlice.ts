@@ -11,6 +11,10 @@ type Weather = {
     windspeed: number;
     is_day: number;
     weathercode: number;
+    weather_detail: string;
+    apparent_temperature: number;
+    relativehumidity: number;
+    rain: number;
   };
   hourly: {
     time: string[];
@@ -37,6 +41,10 @@ type CurrentWeather = {
   windspeed: number;
   is_day: number;
   weathercode: number;
+  weather_detail: string;
+  apparent_temperature: number;
+  relativehumidity: number;
+  rain: number;
 };
 
 export const getLocationWeather = createAsyncThunk(
@@ -51,11 +59,11 @@ export const getLocationWeather = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const { data } = await axios.post(
+      const response = await axios.post(
         `${endpoints.BACKEND_URL}/get-weather`,
         locationMetaData
       );
-      return data;
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
     }
@@ -64,6 +72,8 @@ export const getLocationWeather = createAsyncThunk(
 
 type LocationSlice = {
   weather?: CurrentWeather;
+  location?: string;
+  category?: string;
   loading: boolean;
   error?: object;
   latitude?: number;
@@ -72,6 +82,8 @@ type LocationSlice = {
 
 const initialState: LocationSlice = {
   weather: undefined,
+  location: undefined,
+  category: undefined,
   loading: false,
   error: undefined,
   latitude: undefined,
@@ -86,6 +98,9 @@ const locationSlice = createSlice({
       state.latitude = action.payload.latitude;
       state.longitude = action.payload.longitude;
     },
+    setCategory: (state, action) => {
+      state.category = action.payload
+    }
   },
   extraReducers(builder) {
     builder.addCase(getLocationWeather.pending, (state: LocationSlice) => {
@@ -94,6 +109,9 @@ const locationSlice = createSlice({
     builder.addCase(getLocationWeather.fulfilled, (state, action) => {
       state.loading = false;
       state.weather = action.payload.data.current_weather;
+      state.location = action.payload.data.city + ', ' + action.payload.data.state;
+      state.category = "Cloudy";
+      
       state.error = undefined;
     });
     builder.addCase(getLocationWeather.rejected, (state, action) => {
@@ -103,5 +121,5 @@ const locationSlice = createSlice({
   },
 });
 
-export const { setLocation } = locationSlice.actions;
+export const { setLocation, setCategory } = locationSlice.actions;
 export default locationSlice.reducer;

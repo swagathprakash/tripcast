@@ -10,6 +10,10 @@ import leisureCardBg from "../assets/images/cardbackground/LeisureCardBG.jpg";
 import shoppingCardBg from "../assets/images/cardbackground/ShoppingCardBG.jpg";
 import sightsCardBg from "../assets/images/cardbackground/SightsCardBG.jpg";
 import profileAvatar from "../assets/images/profileAvatar.png";
+import Sunny from "../assets/images/sunny.jpg";
+import Thunderstorm from "../assets/images/thunderstorm.jpg";
+import Rainy from "../assets/images/rainy.jpg";
+import Cloudy from "../assets/images/cloudy.jpg";
 
 export default {
   loginBackground,
@@ -24,4 +28,8 @@ export default {
   shoppingCardBg,
   sightsCardBg,
   profileAvatar,
+  Sunny,
+  Thunderstorm,
+  Cloudy,
+  Rainy,
 };
