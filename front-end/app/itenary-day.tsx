@@ -5,8 +5,8 @@ import ItenaryDay from "@/components/itenary/ItenaryDay";
 
 const ItenaryDays = () => {
   return (
-    <SafeAreaView>
-      <ScrollView className="min-h-screen">
+    <SafeAreaView className="">
+      <ScrollView className="min-h-screen ">
         <ItenaryDay />
       </ScrollView>
     </SafeAreaView>
