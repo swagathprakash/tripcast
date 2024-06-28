@@ -14,6 +14,7 @@ import Sunny from "../assets/images/sunny.jpg";
 import Thunderstorm from "../assets/images/thunderstorm.jpg";
 import Rainy from "../assets/images/rainy.jpg";
 import Cloudy from "../assets/images/cloudy.jpg";
+import noNotification from "../assets/images/notificationLogo.png";
 
 export default {
   loginBackground,
@@ -25,6 +26,7 @@ export default {
   entertainnmentCardBg,
   heritageCardBg,
   leisureCardBg,
+  noNotification,
   shoppingCardBg,
   sightsCardBg,
   profileAvatar,

@@ -15,20 +15,12 @@ const Rootlayout = () => {
           name="location-details"
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="itenary-day" options={{ headerShown: false }} />
+        <Stack.Screen name="itenary-details" options={{ headerShown: false }} />
+        <Stack.Screen name="chat-ui" options={{ headerShown: false }} />
+        <Stack.Screen name="coming-soon" options={{ headerShown: false }} />
         <Stack.Screen
-          name="itenary-day"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="itenary-details"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="chat-ui"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="coming-soon"
+          name="notification-details"
           options={{ headerShown: false }}
         />
       </Stack>

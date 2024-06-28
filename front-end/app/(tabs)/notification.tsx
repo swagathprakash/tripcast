@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import NotificationPage from "@/components/NotificationPage";
+
 
 const notification = () => {
   return (
-    <View className="w-full px-5 justify-start h-full">
-      <Text>notification</Text>
-    </View>
-  )
-}
+    <ScrollView className="bg-[#f8fafc]">
+      <View className="w-full px-5 justify-start h-full">
+        <NotificationPage />
+      </View>
+    </ScrollView>
+  );
+};
 
-export default notification
+export default notification;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
