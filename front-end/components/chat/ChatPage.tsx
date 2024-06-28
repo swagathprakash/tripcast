@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { storeData } from '@/libs/utils';
 import { clearUser } from '@/store/slice/authSlice';
 import { router } from 'expo-router';
+import ChatFlow from './ChatFlow';
 
 const ChatPage = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -12,12 +13,8 @@ const ChatPage = () => {
 
   return (
     <>
-      {user ? (
-        <View className="m-3 my-auto bg-white shadow-md shadow-gray-500 rounded-md ">
-          <Text>
-            Chat UI
-          </Text>
-        </View>
+      {true ? (
+        <ChatFlow />
       ) : (
         <View className="m-3 my-auto bg-white shadow-md shadow-gray-500 rounded-md ">
           <View className="px-3 py-3 border-b-[1px] flex-row justify-between items-center border-b-gray-100">

@@ -11,7 +11,7 @@ type Activity = {
   weather_code: number;
 };
 
-type Itenary = {
+export type Itenary = {
   day: number;
   activities: Activity[];
 };
