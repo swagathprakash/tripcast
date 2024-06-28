@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"log"
@@ -10,6 +9,7 @@ import (
 	"trip-cast/domain"
 	"trip-cast/internal/utils"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -65,7 +65,7 @@ func (r *usersRepository) GetUserDetails(ctx context.Context, mobileNumber strin
 		&usersDAO.MobileNumber,
 	)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
 		}
 		log.Println("failed to scan with error %w", err)

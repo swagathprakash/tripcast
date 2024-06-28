@@ -66,21 +66,20 @@ func (h *usersHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		}})
 		return
 	}
+	var res domain.OTPVerifiedResponse
+	
 	if userData == nil {
-		res := domain.OTPVerifiedResponse{
+		res = domain.OTPVerifiedResponse{
 			Verified:    true,
 			UserPresent: false,
 		}
-		api.Success(w, http.StatusOK, res)
-		return
+	} else {
+		res = domain.OTPVerifiedResponse{
+			Verified:    true,
+			UserPresent: true,
+		}
 	}
-	var userDataDTO domain.UsersDTO
-	userDataDTO.MapFromDomain(userData)
-	res := domain.OTPVerifiedResponse{
-		Verified:    true,
-		UserPresent: true,
-		UserData:    userDataDTO,
-	}
+
 	api.Success(w, http.StatusOK, res)
 }
 
