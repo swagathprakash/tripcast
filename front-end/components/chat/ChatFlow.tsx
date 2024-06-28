@@ -14,6 +14,7 @@ import MyDatePicker from "./DatePicker";
 import { useAppDispatch } from "@/store";
 import { generateItinaray } from "@/store/slice/itenararySlice";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const ChatFlow = () => {
   const dispatch = useAppDispatch();
@@ -63,18 +64,22 @@ const ChatFlow = () => {
         },
       ]);
     setAnswers("");
-    // console.log("communication", communication);
   };
-  // console.log("communication", communication);
-  // console.log("communication current quest index", communication[currentQuestIndex]);
-  // console.log("chat", chat[currentQuestIndex]);
-  // console.log("chat next", chat[currentQuestIndex + 1]);
+
   const sendResponse = () => {
-    console.log("Send response");
-    console.log("response", communication);
-    console.log("start loc", startLocation);
-    console.log("en dloc", endlocation);
-    dispatch(generateItinaray());
+    router.push("/itenary-details")
+        const answers = communication.filter(({ type }) => type === "Answer")
+        dispatch(generateItinaray({
+            latitude: endlocation?.lat,
+            longitude: endlocation?.lon,
+            companions: answers[1].data,
+            destination: answers[0].data,
+            start_date: answers[2].data,
+            end_date: answers[3].data,
+            purpose: answers[4].data,
+            starting_location: answers[5].data,
+            mode_of_transport: answers[7].data,
+        }))
   };
 
   return (

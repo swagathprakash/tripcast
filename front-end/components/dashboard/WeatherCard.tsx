@@ -11,7 +11,7 @@ const WeatherCard = () => {
   const dispatch = useAppDispatch();
   const { weather, loading, location, category } = useAppSelector((state) => state.location);
   const data = [
-    { label: "Rain", value: (!loading && weather?.rain) ? `${weather.rain} %` : "0 %" },
+    { label: "Rain", value: (!loading && weather?.rain) ? `${weather.rain} mm` : "0 mm" },
     { label: "Wind speed", value: (!loading && weather?.windspeed) ? `${weather.windspeed} km/hr` : "" },
     { label: "Humidity", value: (!loading && weather?.relativehumidity) ? `${weather.relativehumidity} %` : "" },
   ];

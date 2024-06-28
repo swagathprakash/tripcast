@@ -12,7 +12,7 @@ const ChatPage = () => {
   const dispatch = useDispatch();
   return (
     <>
-      {true ? (
+      {user ? (
         <ChatFlow />
       ) : (
         <View className="m-3 my-auto bg-white shadow-md shadow-gray-500 rounded-md ">
