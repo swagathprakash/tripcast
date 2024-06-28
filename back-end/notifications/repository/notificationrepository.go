@@ -34,6 +34,22 @@ const (
 	WHERE
 		n.user_id = $1;
 	`
+
+	queryDeleteNotification = `
+	DELETE FROM
+		notifications
+	WHERE
+		notification_id = $1;
+	`
+
+	queryUpdateNotification = `
+	UPDATE
+		notifications
+	SET
+		is_read = true
+	WHERE
+		notification_id = $1;
+	`
 )
 
 func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]domain.Notifications, error) {
@@ -66,4 +82,21 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 	}
 
 	return notifications, nil
+}
+
+
+func (r *notificationRepository) DeleteNotification(ctx context.Context, notificationID uint64) error {
+	_, err := r.db.ExecContext(ctx, queryDeleteNotification, notificationID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *notificationRepository) UpdateNotifications(ctx context.Context, notificationID uint64) error {
+	_, err := r.db.ExecContext(ctx, queryUpdateNotification, notificationID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

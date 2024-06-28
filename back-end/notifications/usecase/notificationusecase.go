@@ -33,3 +33,22 @@ func (u *notificationUsecase) List(ctx context.Context, userID uint64) ([]domain
 
 	return notificationList, nil
 }
+
+
+func (u *notificationUsecase) Delete(ctx context.Context, notificationID uint64) error {
+	err := u.notificationRepository.DeleteNotification(ctx, notificationID)
+	if err != nil {
+		log.Println("failed to delete notification with error", err)
+		return err
+	}
+	return nil
+}
+
+func (u *notificationUsecase) UpdateNotifications(ctx context.Context, notificationID uint64) error {
+	err := u.notificationRepository.UpdateNotifications(ctx, notificationID)
+	if err != nil {
+		log.Println("failed to delete notification with error", err)
+		return err
+	}
+	return nil
+}

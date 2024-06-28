@@ -16,8 +16,12 @@ type Notifications struct {
 
 type NotificationRepository interface {
 	List(ctx context.Context, userID uint64) ([]Notifications, error)
+	DeleteNotification(ctx context.Context, notificationID uint64) error
+	UpdateNotifications(ctx context.Context, notificationID uint64) error
 }
 
 type NotificationUsecase interface {
 	List(ctx context.Context, userID uint64) ([]NotificationsDTO, error)
+	Delete(ctx context.Context, notificationID uint64) error
+	UpdateNotifications(ctx context.Context, notificationID uint64) error
 }
