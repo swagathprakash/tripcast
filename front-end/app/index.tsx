@@ -19,8 +19,8 @@ const App = () => {
           <TextCarousel />
           <CustomButton content="Get started" navigator="/authentication" />
         </ScrollView>
-        <StatusBar style="dark" />
       </ImageBackground>
+      <StatusBar style="dark" backgroundColor="white" />
     </SafeAreaView>
   );
 };

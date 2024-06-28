@@ -1,6 +1,8 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ScrollView, Image } from "react-native";
 import React from "react";
 import { router } from "expo-router";
+import { getCategory } from "@/libs/utils";
+import { icons } from "@/constants";
 
 const data = {
   destination: "Wayanad",
@@ -8,11 +10,53 @@ const data = {
   duration: 2,
   purpose: "Chill",
   startingLocation: "Thrissur",
-  weatherForecast: {
-    summary:
-      "Enjoy a mix of sun and showers! Day 1 might see some evening rain, but Day 2 looks clear. Pack for both!",
-    averageTemperature: 24.5,
-  },
+  forecast: [
+    {
+      time: "2024-07-01T08:00",
+      weather_code: 17,
+      weather: "Overcast",
+    },
+    {
+      time: "2024-07-01T12:00",
+      weather_code: 15,
+      weather: "Overcast",
+    },
+    {
+      time: "2024-07-01T14:00",
+      weather_code: 0,
+      weather: "Overcast",
+    },
+    {
+      time: "2024-07-01T16:00",
+      weather_code: 10,
+      weather: "Light showers",
+    },
+    {
+      time: "2024-07-01T18:00",
+      weather_code: 10,
+      weather: "Overcast",
+    },
+    {
+      time: "2024-07-02T08:00",
+      weather_code: 10,
+      weather: "Overcast",
+    },
+    {
+      time: "2024-07-02T09:00",
+      weather_code: 10,
+      weather: "Light showers",
+    },
+    {
+      time: "2024-07-02T11:00",
+      weather_code: 10,
+      weather: "Partly cloudy",
+    },
+    {
+      time: "2024-07-02T14:00",
+      weather_code: 10,
+      weather: "Overcast",
+    },
+  ],
   itinerary: [
     {
       day: 1,
@@ -158,17 +202,44 @@ const ItenaryDetails = () => {
           </Text>
         </View>
       </View>
-      <View className=" flex-wrap m-3 bg-white rounded-md border-[1px] border-gray-100 shadow-md shadow-gray-300 ">
-        <View className="border-b-[1px] border-b-gray-100 flex-row justify-between items-center py-2 px-5 flex-1">
-          <Text className="text-lg text-primary font-semibold">Weather</Text>
-          <Text className="text-base text-primary font-semibold">
-            {data.weatherForecast.averageTemperature}°C
-          </Text>
+      <View className=" flex-wrap m-3 bg-white rounded-md border-[1px] border-gray-100 shadow-md shadow-gray-300">
+        <View className="border-b-[1px] border-b-gray-100 flex-row justify-between items-center py-2 px-5 w-full">
+          <Text className="text-lg text-primary font-semibold ">Weather</Text>
         </View>
-        <View className="py-3 px-5">
-          <Text className="text-xs text-gray-500 text-justify font-semibold ">
-            {data.weatherForecast.summary}
-          </Text>
+        <View className="flex-1 overflow-hidden p-5">
+          <ScrollView horizontal className="flex-1 gap-4 pl-1 pb-[5px]">
+            {data.forecast.map((item, index) => {
+              const category = getCategory(item.weather_code);
+              return (
+                <View key={index} className="items-center justify-start pr-2">
+                  <Text className="text-[10px] font-semibold text-gray-400">
+                    {new Date(item.time).toLocaleDateString().slice(0, 5)}
+                  </Text>
+                  <Text className="text-xs font-semibold text-primary">
+                    {item.time.split("T")[1]}
+                  </Text>
+                  <Image
+                    className="h-10 w-10"
+                    resizeMode="contain"
+                    source={
+                      category === "Sunny"
+                        ? icons.Sunny
+                        : category === "Cloudy"
+                        ? icons.Cloudy
+                        : category === "Rainy"
+                        ? icons.Rainy
+                        : icons.Thunderstorm
+                    }
+                  />
+                  <Text
+                    className={`text-center font-semibold text-[10px] text-gray-400 `}
+                  >
+                    {item?.weather}
+                  </Text>
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
       </View>
       <View className=" flex-wrap m-3 bg-white rounded-md border-[1px] border-gray-100 shadow-md shadow-gray-300 ">

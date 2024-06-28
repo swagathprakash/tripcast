@@ -10,7 +10,7 @@ const itenary = [
       {
         time: "11:00",
         location: "Wayanad",
-        weatherCode: 10,
+        weather_code: 10,
         description:
           "Arrive in Wayanad and check into a charming homestay nestled in the hills. Unpack and take in the scenic views.",
         weatherCondition: "Partly Cloudy",
@@ -21,7 +21,7 @@ const itenary = [
         description:
           "Enjoy a relaxing lunch at a local restaurant, savouring Wayanad's traditional cuisine.",
         weatherCondition: "Partly Cloudy",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "14:00",
@@ -29,7 +29,7 @@ const itenary = [
         description:
           "Visit the impressive Banasura Sagar Dam. Take a leisurely walk along the dam's top or opt for a peaceful boat ride on the reservoir, surrounded by stunning views.",
         weatherCondition: "Partly Cloudy",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "17:00",
@@ -37,7 +37,7 @@ const itenary = [
         description:
           "Immerse yourselves in the local history and culture at the Wayanad Heritage Museum. Learn about the region's tribal heritage and its fascinating past.",
         weatherCondition: "Partly Cloudy",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "19:00",
@@ -45,7 +45,7 @@ const itenary = [
         description:
           "Enjoy a delicious dinner and relax as the evening might bring some showers. Opt for a cozy dinner at your homestay or venture out to a local restaurant if the rain holds back.",
         weatherCondition: "Possible Light Rain",
-        weatherCode: 10,
+        weather_code: 10,
       },
     ],
   },
@@ -58,7 +58,7 @@ const itenary = [
         description:
           "Start your day with a refreshing breakfast, taking in the beauty of the clear skies.",
         weatherCondition: "Sunny",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "10:00",
@@ -66,7 +66,7 @@ const itenary = [
         description:
           "If you're up for an adventure, embark on a trek to Chembra Peak, the highest peak in Wayanad. The clear weather will offer breathtaking panoramic views (Remember to check local conditions and permits before heading out).",
         weatherCondition: "Sunny",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "13:00",
@@ -74,7 +74,7 @@ const itenary = [
         description:
           "Cool down with a visit to the cascading Soochipara Falls. Enjoy the refreshing spray and the lush green surroundings. (Water levels may be higher due to previous day's rain, so exercise caution.)",
         weatherCondition: "Sunny",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "15:00",
@@ -82,7 +82,7 @@ const itenary = [
         description:
           "Spend a peaceful afternoon boating on the tranquil Pookode Lake. Surrounded by lush forests, it's the perfect spot to relax and enjoy the serene atmosphere.",
         weatherCondition: "Sunny",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "18:00",
@@ -90,7 +90,7 @@ const itenary = [
         description:
           "Before heading back, explore the local market for spices, tea, coffee, or handicrafts as souvenirs of your trip.",
         weatherCondition: "Partly Cloudy",
-        weatherCode: 10,
+        weather_code: 10,
       },
       {
         time: "19:00",
@@ -98,7 +98,7 @@ const itenary = [
         description:
           "Depart from Wayanad with cherished memories of your relaxing getaway.",
         weatherCondition: "Partly Cloudy",
-        weatherCode: 10,
+        weather_code: 10,
       },
     ],
   },
