@@ -2,13 +2,13 @@ import { View, Text } from "react-native";
 import React from "react";
 
 const DetailsCard = ({ data }: any) => {
-  return data.length < 1 ? (
+  return data?.length < 1 ? (
     <View className="flex-1">
       <Text className="text-primary text-lg text-center font-semibold my-16">Found 0 results</Text>
     </View>
   ) : (
     <View className="px-0">
-      {data.map((item: any) => {
+      {data?.map((item: any) => {
         const categories: Set<string> = new Set(
           item.categories.map((str: string) => str.split(".")).flat()
         );

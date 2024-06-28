@@ -1,15 +1,13 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native";
 import React from "react";
-import ItenaryDetails from "@/components/itenary/itenary-details";
+import TripPage from "@/components/trip/TripPage";
 
 const create = () => {
   return (
-    <ScrollView className=" bg-slate-50">
-      <ItenaryDetails />
+    <ScrollView className='bg-slate-50'>
+      <TripPage />
     </ScrollView>
   );
 };
 
 export default create;
-
-const styles = StyleSheet.create({});

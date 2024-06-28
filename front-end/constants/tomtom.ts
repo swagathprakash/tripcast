@@ -1,0 +1,1 @@
+export const TOMTOM_API_KEY = "12LfA58Zc76n7taJ5zTapGSGkCG50OG6";

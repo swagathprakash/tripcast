@@ -5,13 +5,13 @@ import Hotels from "./HotelsBody";
 import Food from "./FoodBody";
 import Tradition from "./TraditionBody";
 
-const TabBody = ({ index }: { index: number }) => {
+const TabBody = ({ index, sections }: { index: number; sections: React.JSX.Element[] }) => {
   const currentIndex = index;
   const ref = useRef<FlatList>(null);
-  const sections = [<Location />, <Hotels />, <Food />, <Tradition />];
   useEffect(() => {
     ref.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
   }, [index]);
+  
   return (
     <FlatList
       ref={ref}
@@ -26,9 +26,8 @@ const TabBody = ({ index }: { index: number }) => {
         const selection = BodyIndex !== currentIndex;
         return (
           <View
-            className={` w-[90vw] min-h-[74vh] mx-1 my-2 overflow-scroll ${
-              selection && "max-h-[74vh]"
-            }`}
+            className={` w-[90vw] min-h-[74vh] mx-1 my-2 overflow-scroll ${selection && "max-h-[74vh]"
+              }`}
           >
             {item}
           </View>

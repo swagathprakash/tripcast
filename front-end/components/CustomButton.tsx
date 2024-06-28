@@ -12,7 +12,7 @@ const CustomButton = ({
   parentStyle,
 }: {
   content: string;
-  navigator: string;
+  navigator?: string;
   childStyle?: string;
   parentStyle?: string;
 }) => {
@@ -21,14 +21,14 @@ const CustomButton = ({
   return (
     <View>
       <TouchableOpacity
-        className="x-2 mx-auto py-2 w-[50vw] rounded-full items-center justify-center bg-white border-[1px] border-primary opacity-80"
+        className={`x-2 mx-auto py-2 w-[50vw] rounded-md items-center justify-center bg-white border-[1px] border-primary opacity-80 ${parentStyle}`}
         onPress={async () => {
           const phone = await getData();
           phone && dispatch(authenticateUser({ phone }) as any);
-          router.push(navigator);
+          navigator && router.push(navigator);
         }}
       >
-        <Text className="text-primary text-lg text-center font-bold">
+        <Text className={`text-primary text-lg text-center font-bold ${childStyle}`}>
           {content}
         </Text>
       </TouchableOpacity>
