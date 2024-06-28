@@ -6,8 +6,8 @@ import (
 )
 
 type TripsDTO struct {
-	UserID      int64           `json:"user_id"`
-	TripDetails gemini.Response `json:"trip_details"`
+	UserID      int64           `json:"userId"`
+	TripDetails gemini.Response `json:"tripDetails"`
 }
 
 type TripRequestParams struct {
