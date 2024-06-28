@@ -10,6 +10,8 @@ type TripsDAO struct {
 	TripID           pgtype.Int8
 	UserID           pgtype.Int8
 	StartingLocation pgtype.Text
+	Latitude         pgtype.Float8
+	Longitude        pgtype.Float8
 	Destination      pgtype.Text
 	StartDate        pgtype.Date
 	EndDate          pgtype.Date
@@ -36,4 +38,6 @@ func (dao TripsDAO) MapToDomain(domain *Trip) {
 	domain.Forecast = json.RawMessage(dao.Forecast.String)
 	domain.PackingItems = dao.PackingItems
 	domain.SafetyTips = dao.SafetyTips
+	domain.Latitude = dao.Latitude.Float64
+	domain.Longitude = dao.Longitude.Float64
 }

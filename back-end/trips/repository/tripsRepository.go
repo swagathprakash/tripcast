@@ -36,7 +36,9 @@ const (
 		itinerary,
 		forecast,
 		packing_items,
-		safety_tips
+		safety_tips,
+		latitude,
+		longitude
 	FROM
 		trips
 	%s
@@ -58,6 +60,8 @@ const (
 	columnForecast      = "forecast"
 	columnPackngItems   = "packing_items"
 	columnSafetyTips    = "safety_tips"
+	columnLatitude      = "latitude"
+	columnLongitude     = "longitude"
 )
 
 var columsToInsert = []string{
@@ -72,6 +76,8 @@ var columsToInsert = []string{
 	columnForecast,
 	columnPackngItems,
 	columnSafetyTips,
+	columnLatitude,
+	columnLongitude,
 }
 
 func (r *tripsRepository) GetTripDetails(ctx context.Context, params domain.TripRequestParams) ([]domain.Trip, error) {
@@ -118,6 +124,8 @@ func (r *tripsRepository) GetTripDetails(ctx context.Context, params domain.Trip
 			&tripDao.Forecast,
 			&tripDao.PackingItems,
 			&tripDao.SafetyTips,
+			&tripDao.Latitude,
+			&tripDao.Longitude,
 		)
 		if err != nil {
 			log.Printf("error while scaning rows in listing trips:%s", err.Error())
@@ -142,9 +150,10 @@ func (r *tripsRepository) InsertTripDetails(ctx context.Context, trip domain.Tri
 		trip.Purpose,
 		trip.Itinerary,
 		trip.Forecast,
-
 		trip.PackingItems,
 		trip.SafetyTips,
+		trip.Latitude,
+		trip.Longitude,
 	}
 
 	placeHolders := utils.GeneratePlaceHolders(len(params), 1)

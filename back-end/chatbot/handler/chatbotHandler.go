@@ -87,8 +87,6 @@ func (h chatBotHandler) AskModel(w http.ResponseWriter, r *http.Request) {
 	trimmedResponse := strings.ReplaceAll(string(responseString), "```json", "")
 	finalResponseString := strings.ReplaceAll(trimmedResponse, "```", "")
 
-	log.Println(responseString)
-
 	err = json.Unmarshal([]byte(finalResponseString), &response)
 	if err != nil {
 		log.Printf("chat bot handler Unmarshal error : %s", err.Error())
@@ -98,6 +96,9 @@ func (h chatBotHandler) AskModel(w http.ResponseWriter, r *http.Request) {
 		}})
 		return
 	}
+
+	response.Latitude = request.Latitude
+	response.Longitude = request.Longitude
 
 	api.Success(w, http.StatusOK, response)
 

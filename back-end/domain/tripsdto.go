@@ -16,7 +16,7 @@ type TripRequestParams struct {
 }
 
 type TripsResponse struct {
-	Trip     *gemini.Response   `json:"trip_datails,omitempty"`
+	Trip     *gemini.Response  `json:"trip_datails,omitempty"`
 	Upcoming []gemini.Response `json:"upcoming,omitempty"`
 	Finished []gemini.Response `json:"finished,omitempty"`
 }
@@ -31,4 +31,6 @@ func (domain Trip) MapFromDomain(response *gemini.Response) {
 	response.Purpose = domain.Purpose
 	response.PackingItems = domain.PackingItems
 	response.SafetyTips = domain.SafetyTips
+	response.Latitude = domain.Latitude
+	response.Longitude = domain.Longitude
 }
