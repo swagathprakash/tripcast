@@ -8,8 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { storeData } from "@/libs/utils";
 import { getLocationWeather, setLocation as setLocationSlice } from "@/store/slice/locationSlice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
+
 
 
 const AuthLayout = () => {

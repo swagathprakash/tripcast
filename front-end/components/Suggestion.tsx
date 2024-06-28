@@ -52,7 +52,6 @@ const Suggestion = ({
       searchInputRef.current.blur();
     }
     onPressItem(item, event);
-    console.log("On press", item);
     setAnswers(item.address);
     setLocation(item);
   };
@@ -78,6 +77,7 @@ const Suggestion = ({
             if (index < 4) {
               return (
                 <SuggestionListItem
+                  key={`${index}${item.p1}`}
                   onPressItem={handleOnPressItem}
                   item={item}
                 />
