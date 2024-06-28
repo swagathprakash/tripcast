@@ -8,20 +8,22 @@ import CustomButton from "@/components/CustomButton";
 
 const App = () => {
   return (
-    <SafeAreaView className="flex-1">
-      <ImageBackground
-        source={images.landingPage}
-        className=""
-        resizeMode="cover"
-      >
-        <ScrollView contentContainerStyle={{ height: "100%" }}>
-          <Logo skip={false} />
-          <TextCarousel />
-          <CustomButton content="Get started" navigator="/authentication" />
-        </ScrollView>
-      </ImageBackground>
+    <>
+      <SafeAreaView className="flex-1">
+        <ImageBackground
+          source={images.landingPage}
+          className=""
+          resizeMode="cover"
+        >
+          <ScrollView contentContainerStyle={{ height: "100%" }}>
+            <Logo skip={false} />
+            <TextCarousel />
+            <CustomButton content="Get started" navigator="/authentication" />
+          </ScrollView>
+        </ImageBackground>
+      </SafeAreaView>
       <StatusBar style="dark" backgroundColor="white" />
-    </SafeAreaView>
+    </>
   );
 };
 
