@@ -10,7 +10,7 @@ const ItenaryDays = () => {
     return (
         <SafeAreaView>
             <ScrollView className="min-h-screen">
-                <ItenaryDetails />
+                <ItenaryDetails tripId={tripId} />
             </ScrollView>
         </SafeAreaView>
     )

@@ -18,7 +18,7 @@ export const authenticateUser: any = createAsyncThunk(
 
 type AuthSlice = {
   user?: {
-    user_id: string;
+    user_id: number;
     firstName: string;
     lastName: string;
     phone: string;
@@ -49,6 +49,7 @@ const authSlice = createSlice({
       result.firstName = action.payload?.data?.first_name;
       result.lastName = action.payload?.data?.last_name;
       result.phone = action.payload?.data?.phone;
+      result.user_id = action.payload?.data?.user_id
       state.user = result;
       state.loading = false;
       state.error = undefined;

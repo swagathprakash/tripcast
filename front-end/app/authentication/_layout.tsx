@@ -20,7 +20,7 @@ const AuthLayout = () => {
   useEffect(() => {
     if (user) {
       storeData(user.phone);
-      router.push("/home");
+      router.replace("/home");
     }
   }, [user]);
 
