@@ -65,6 +65,8 @@ const (
 		longitude
 	FROM
 		trips
+	WHERE
+		end_date::DATE >= NOW()::DATE
 	ORDER BY
 		user_id
 	LIMIT $1
