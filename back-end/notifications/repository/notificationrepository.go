@@ -2,8 +2,12 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
+	"time"
 	"trip-cast/domain"
+	"trip-cast/internal/utils"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -52,7 +56,25 @@ const (
 	WHERE
 		notification_id = $1;
 	`
+
+	queryInsertNotification = `
+	INSERT INTO
+		notifications (%s)
+	VALUES %s
+	ON CONFLICT(user_id,trip_id) DO UPDATE SET
+	content = EXCLUDED.content,
+    trip_id = EXCLUDED.trip_id,
+    user_id = EXCLUDED.user_id,
+    created_at = EXCLUDED.created_at;
+	`
 )
+
+var columnsToInsert = []string{
+	"content",
+	"trip_id",
+	"user_id",
+	"created_at",
+}
 
 func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]domain.Notifications, error) {
 
@@ -63,7 +85,7 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 	)
 	rows, err := r.db.Query(ctx, queryFetchNotifications, userID)
 	if err != nil {
-		log.Printf("error while listing notification:%s",err.Error())
+		log.Printf("error while listing notification:%s", err.Error())
 		return nil, err
 	}
 	defer rows.Close()
@@ -78,7 +100,7 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 			&notificationDAO.CreatedAt,
 		)
 		if err != nil {
-					log.Printf("error while scaning rows in listing notification:%s",err.Error())
+			log.Printf("error while scaning rows in listing notification:%s", err.Error())
 			return nil, err
 		}
 		notificationDAO.MapToDomain(&notification)
@@ -87,7 +109,6 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 
 	return notifications, nil
 }
-
 
 func (r *notificationRepository) DeleteNotification(ctx context.Context, notificationID uint64) error {
 	_, err := r.db.Exec(ctx, queryDeleteNotification, notificationID)
@@ -99,6 +120,24 @@ func (r *notificationRepository) DeleteNotification(ctx context.Context, notific
 
 func (r *notificationRepository) UpdateNotifications(ctx context.Context, notificationID uint64) error {
 	_, err := r.db.Exec(ctx, queryUpdateNotification, notificationID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *notificationRepository) Insert(ctx context.Context, notification domain.Notifications) error {
+
+	singleRowParams := []any{
+		notification.Content,
+		notification.TripID,
+		notification.UserID,
+		time.Now(),
+	}
+
+	placeHolders := utils.GeneratePlaceHolders(len(columnsToInsert), 1)
+	query := fmt.Sprintf(queryInsertNotification, strings.Join(columnsToInsert, ","), placeHolders)
+	_, err := r.db.Exec(ctx, query, singleRowParams...)
 	if err != nil {
 		return err
 	}

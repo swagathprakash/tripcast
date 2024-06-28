@@ -18,6 +18,7 @@ type NotificationRepository interface {
 	List(ctx context.Context, userID uint64) ([]Notifications, error)
 	DeleteNotification(ctx context.Context, notificationID uint64) error
 	UpdateNotifications(ctx context.Context, notificationID uint64) error
+	Insert(ctx context.Context, notification Notifications) error
 }
 
 type NotificationUsecase interface {

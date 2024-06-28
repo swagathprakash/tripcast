@@ -2,9 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"strings"
-	"time"
 )
 
 func GeneratePlaceHolders(columns, rows int) string {
@@ -41,15 +39,4 @@ func IsCommonElementPresent[T comparable](slice1, slice2 []T) bool {
 	}
 
 	return false
-}
-
-func BackgroundProcesses(params any) (any, error) {
-	for {
-		ticker := time.NewTicker(5 * time.Second)
-
-		for range ticker.C {
-			// code to execute
-			log.Println("5 seconds has pased")
-		}
-	}
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	backgroundservice "trip-cast/backgroundservice/usecase"
 	chatBothandler "trip-cast/chatbot/handler"
 	chatBotusecase "trip-cast/chatbot/usecase"
 	"trip-cast/internal/database"
@@ -12,7 +13,6 @@ import (
 	"trip-cast/internal/gemini"
 	"trip-cast/internal/location"
 	"trip-cast/internal/sms"
-	"trip-cast/internal/utils"
 	"trip-cast/internal/weather"
 	"trip-cast/internal/workerpool"
 	"trip-cast/middlewares"
@@ -60,13 +60,6 @@ func main() {
 	r.Use(middlewares.SetContentType)
 	r.Use(corsHandler)
 
-	woorkerPool := workerpool.NewWorkerPool(env.MaxWorkers)
-	woorkerPool.Start()
-	woorkerPool.Add(workerpool.Task{
-		Func:             utils.BackgroundProcesses,
-		Ctx:              ctx,
-		IsResultExpected: false,
-	})
 
 	// setup services
 	smsService := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
@@ -96,6 +89,16 @@ func main() {
 	tr := tripsRepository.NewTripsRepository(db)
 	tu := tripsUsecase.NewTripsUsecase(tr)
 	tripsHandler.NewTripsHandler(r, tu)
+	bu := backgroundservice.NewBackgroundServiceUsecase(wu, tr, nr)
+
+	woorkerPool := workerpool.NewWorkerPool(env.MaxWorkers)
+	woorkerPool.Start()
+	woorkerPool.Add(workerpool.Task{
+		Func:             bu.BackgroundNotificationProcesses,
+		Ctx:              ctx,
+		Param:            backgroundservice.BackgroundNotificationServiceParams{WorkerPool: woorkerPool},
+		IsResultExpected: false,
+	})
 
 	// start server
 	log.Println("Server started")

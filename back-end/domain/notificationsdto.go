@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type NotificationsDTO struct {
 	NotificationID uint64    `json:"notification_id"`
@@ -13,6 +16,11 @@ type NotificationsDTO struct {
 
 type NotificationModifyRequest struct {
 	NotificationID uint64 `json:"notification_id"`
+}
+
+type CreateNotificationParams struct {
+	Trips []Trip
+	Ctx   context.Context
 }
 
 func (dto *NotificationsDTO) MapFromDomain(domain Notifications) {
