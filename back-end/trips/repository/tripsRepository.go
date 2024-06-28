@@ -24,9 +24,22 @@ func NewTripsRepository(db *pgxpool.Pool) domain.TripsRepository {
 
 const (
 	queryFetchTripDetails = `
-	SELECT *
+	SELECT
+		trip_id,
+		user_id,
+		start_location,
+		destination,
+		start_date,
+		end_date,
+		companions,
+		purpose,
+		itinerary,
+		forecast,
+		packing_items,
+		safety_tips
 	FROM
 		trips
+	%s
 	`
 	queryInsertToTrips = `
 	INSERT INTO trips (%s) VALUES %s RETURNING trip_id;
@@ -61,28 +74,61 @@ var columsToInsert = []string{
 	columnSafetyTips,
 }
 
-// func (r *tripsRepository) GetTripDetails(ctx context.Context, tripID int64) (*domain.Users, error) {
-// 	var (
-// 		trips    domain.Trip
-// 		usersDAO domain.UsersDAO
-// 	)
-// 	err := r.db.QueryRowContext(ctx, queryFetchUserDetails, tripID).Scan(
-// 		&usersDAO.UserID,
-// 		&usersDAO.FirstName,
-// 		&usersDAO.LastName,
-// 		&usersDAO.MobileNumber,
-// 	)
-// 	if err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return nil, nil
-// 		}
-// 		log.Println("failed to scan with error %w", err)
-// 		return nil, err
-// 	}
-// 	usersDAO.MapToDomain(&users)
+func (r *tripsRepository) GetTripDetails(ctx context.Context, params domain.TripRequestParams) ([]domain.Trip, error) {
 
-// 	return &users, nil
-// }
+	var (
+		tripDao    domain.TripsDAO
+		trip       domain.Trip
+		trips      []domain.Trip
+		wherePrams interface{}
+		whereQuery []string
+		args       int
+	)
+
+	if params.TripID != 0 {
+		whereQuery = append(whereQuery, fmt.Sprintf("WHERE trip_id = $%d", args+1))
+		wherePrams = params.TripID
+		args++
+	}
+	if params.UserID != 0 {
+		whereQuery = append(whereQuery, fmt.Sprintf("WHERE user_id = $%d", args+1))
+		wherePrams = params.UserID
+		args++
+	}
+
+	query := fmt.Sprintf(queryFetchTripDetails, whereQuery[0])
+	rows, err := r.db.Query(ctx, query, wherePrams)
+	if err != nil {
+		log.Printf("error while listing trips:%s", err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&tripDao.TripID,
+			&tripDao.UserID,
+			&tripDao.StartingLocation,
+			&tripDao.Destination,
+			&tripDao.StartDate,
+			&tripDao.EndDate,
+			&tripDao.Companions,
+			&tripDao.Purpose,
+			&tripDao.Itinerary,
+			&tripDao.Forecast,
+			&tripDao.PackingItems,
+			&tripDao.SafetyTips,
+		)
+		if err != nil {
+			log.Printf("error while scaning rows in listing trips:%s", err.Error())
+			return nil, err
+		}
+		tripDao.MapToDomain(&trip)
+		trips = append(trips, trip)
+	}
+
+	return trips, nil
+}
 
 func (r *tripsRepository) InsertTripDetails(ctx context.Context, trip domain.Trip) (uint64, error) {
 	var tripID pgtype.Int8
