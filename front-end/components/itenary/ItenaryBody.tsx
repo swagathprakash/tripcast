@@ -1,11 +1,14 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Image } from "react-native";
 import React, { useEffect, useRef } from "react";
+import { getCategory } from "@/libs/utils";
+import { icons } from "@/constants";
 
 type Activity = {
   time: string;
   location: string;
   description: string;
   weatherCondition: string;
+  weather_code: number;
 };
 
 type Itenary = {
@@ -44,18 +47,33 @@ const ItenaryBody = ({
                 <View className="h-[9px] w-[9px] border-2 border-gray-500 rounded-full absolute top-0 left-[76px]"></View>
                 <View className="h-[9px] w-[9px] border-2 border-gray-500 rounded-full absolute bottom-0 left-[76px]"></View>
                 {item.activities.map((item, index) => {
+                  const category = getCategory(item.weather_code);
                   return (
-                    <View key={index}
+                    <View
+                      key={index}
                       className={` flex-1 relative flex-row gap-[1px] ${
                         index && "border-t-[1px] border-t-gray-200"
                       } `}
                     >
                       <View className="h-[10px] w-[10px] bg-gray-500 border-[1px] border-white rounded-full absolute top-[14px] z-10 left-[75px]"></View>
-                      <View className="justify-start items-end pr-3 w-20 border-r-2 border-r-gray-300 pb-2 pt-1 ">
-                        <Text className="text-primary font-semibold text-lg ">
+                      <View className="justify-start items-center pr-3 w-20 border-r-2 border-r-gray-300 pb-2 pt-1 ">
+                        <Text className="text-primary font-semibold text-lg text-center">
                           {item.time}
                         </Text>
-                        <Text className="  text-gray-500 font-medium text-[10px] text-right ">
+                        <Image
+                          className="h-8 w-8"
+                          resizeMode="contain"
+                          source={
+                            category === "Sunny"
+                              ? icons.Sunny
+                              : category === "Cloudy"
+                              ? icons.Cloudy
+                              : category === "Rainy"
+                              ? icons.Rainy
+                              : icons.Thunderstorm
+                          }
+                        />
+                        <Text className="  text-gray-500 font-medium text-[9px] text-center ">
                           {item.weatherCondition}
                         </Text>
                       </View>
