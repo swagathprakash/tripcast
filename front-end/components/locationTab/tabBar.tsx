@@ -12,23 +12,23 @@ import TabHeader from "./tabHeader";
 import TabBody from "./tabBody";
 import { useAppSelector } from "@/store";
 
-const sections = ["Location", "Hotels", "Food", "Tradition"];
 
-const TabBar = () => {
+const TabBar = ({ sectionLabel, sectionBody, page }: { sectionLabel: string[]; sectionBody: React.JSX.Element[]; page: string }) => {
   const { loading } = useAppSelector((state) => state.places);
   const [sectionIndex, setSectionIndex] = useState<number>(0);
-  return !loading ? (
+
+  return (page === 'explore' && !loading) || page === 'plan' || page === 'saved' ? (
     <View className="">
       <TabHeader
-        sections={sections}
+        sections={sectionLabel}
         setSectionIndex={setSectionIndex}
         sectionIndex={sectionIndex}
       />
-      <TabBody index={sectionIndex} />
+      <TabBody index={sectionIndex} sections={sectionBody} />
     </View>
   ) : (
     <View className="flex-1 my-20">
-      <ActivityIndicator color={"#1f1e1e"}  size={'large'}/>
+      <ActivityIndicator color={"#1f1e1e"} size={'large'} />
     </View>
   );
 };
