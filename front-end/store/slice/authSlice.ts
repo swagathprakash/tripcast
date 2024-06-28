@@ -18,6 +18,7 @@ export const authenticateUser: any = createAsyncThunk(
 
 type AuthSlice = {
   user?: {
+    user_id: string;
     firstName: string;
     lastName: string;
     phone: string;
