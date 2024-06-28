@@ -21,6 +21,9 @@ import (
 	notificationHandler "trip-cast/notifications/handler"
 	notificationRepository "trip-cast/notifications/repository"
 	notificationUsecase "trip-cast/notifications/usecase"
+	tripsHandler "trip-cast/trips/handler"
+	tripsRepository "trip-cast/trips/repository"
+	tripsUsecase "trip-cast/trips/usecase"
 	usersHandler "trip-cast/users/handler"
 	usersRepository "trip-cast/users/repository"
 	usersUsecase "trip-cast/users/usecase"
@@ -76,19 +79,23 @@ func main() {
 	uu := usersUsecase.NewUsersUsecase(ur, smsService)
 	usersHandler.NewUsersHandler(r, uu)
 
-	wu := weatherUsecase.NewWeatherUsecase(locationService)
-	weatherHandler.NewWeatherHandler(r, weatherService, wu)
+	wu := weatherUsecase.NewWeatherUsecase(locationService, weatherService)
+	weatherHandler.NewWeatherHandler(r, wu)
 
 	pu := placesUsecase.NewNearbyPlacesUsecase(locationService)
 	placesHandler.NewNearByPlacesHandler(r, pu)
 
-	cu := chatBotusecase.NewUsersUsecase(weatherService, wu)
-	chatBothandler.NewChatBotHandler(r, geminiService, cu)
+	cu := chatBotusecase.NewChatbotUsecase(weatherService)
+	chatBothandler.NewChatBotHandler(r, geminiService, cu, wu)
 
 	// notification handler
 	nr := notificationRepository.NewNotificationRepository(db)
 	nu := notificationUsecase.NewNotificationUsecase(nr)
 	notificationHandler.NewNotificationHandler(r, nu)
+
+	tr := tripsRepository.NewTripsRepository(db)
+	tu := tripsUsecase.NewTripsUsecase(tr)
+	tripsHandler.NewTripsHandler(r, tu)
 
 	// start server
 	log.Println("Server started")

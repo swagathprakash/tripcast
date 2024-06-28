@@ -4,23 +4,28 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"trip-cast/chatbot/usecase"
+	"strings"
+	chatBotUsecase "trip-cast/chatbot/usecase"
 	"trip-cast/constants"
 	"trip-cast/internal/api"
 	"trip-cast/internal/gemini"
+	"trip-cast/internal/weather"
+	weatherUsecase "trip-cast/weather/usecase"
 
 	"github.com/go-chi/chi/v5"
 )
 
 type chatBotHandler struct {
-	model   *gemini.Model
-	usecase *usecase.ChatBotUsecase
+	model          *gemini.Model
+	chatBotUsecase *chatBotUsecase.ChatBotUsecase
+	weatherUsecase *weatherUsecase.WeatherUsecase
 }
 
-func NewChatBotHandler(r *chi.Mux, model *gemini.Model, usecase *usecase.ChatBotUsecase) {
+func NewChatBotHandler(r *chi.Mux, model *gemini.Model, chatBotUsecase *chatBotUsecase.ChatBotUsecase, weatherUsecase *weatherUsecase.WeatherUsecase) {
 	chatBotHandler := chatBotHandler{
-		model:   model,
-		usecase: usecase,
+		model:          model,
+		chatBotUsecase: chatBotUsecase,
+		weatherUsecase: weatherUsecase,
 	}
 	r.Post("/ask-model", chatBotHandler.AskModel)
 }
@@ -40,7 +45,23 @@ func (h chatBotHandler) AskModel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	prompt, err := h.usecase.ConvertToPrompt(request)
+	weatherParams := weather.Params{
+		Latitude:  request.Latitude,
+		Longitude: request.Longitude,
+		StartDate: request.StartDate,
+		EndDate:   request.EndDate,
+	}
+	weatherResponse, err := h.weatherUsecase.GetWeatherDetails(weatherParams)
+	if err != nil {
+		log.Printf("h.weatherUsecase.GetWeatherDetails failed with error:%s", err.Error())
+		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}})
+		return
+	}
+
+	prompt, err := h.chatBotUsecase.BuildPrompt(weatherResponse, &request)
 	if err != nil {
 		log.Printf("usecase.GetWeatherForecast failed with error:%s", err.Error())
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
@@ -60,9 +81,22 @@ func (h chatBotHandler) AskModel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := gemini.Response{
-		Response:   string(responseString),
-		TokensUsed: tokensUsed,
+	response := gemini.Response{}
+	log.Println("Tokens used:", tokensUsed)
+
+	trimmedResponse := strings.ReplaceAll(string(responseString), "```json", "")
+	finalResponseString := strings.ReplaceAll(trimmedResponse, "```", "")
+
+	log.Println(responseString)
+
+	err = json.Unmarshal([]byte(finalResponseString), &response)
+	if err != nil {
+		log.Printf("chat bot handler Unmarshal error : %s", err.Error())
+		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}})
+		return
 	}
 
 	api.Success(w, http.StatusOK, response)
