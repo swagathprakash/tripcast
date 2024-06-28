@@ -10,14 +10,15 @@ import (
 	"trip-cast/domain"
 	"trip-cast/internal/utils"
 
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type usersRepository struct {
-	db *sql.DB
+	db *pgxpool.Pool
 }
 
-func NewUsersRepository(db *sql.DB) domain.UsersRepository {
+func NewUsersRepository(db *pgxpool.Pool) domain.UsersRepository {
 	return &usersRepository{
 		db: db,
 	}
@@ -57,7 +58,7 @@ func (r *usersRepository) GetUserDetails(ctx context.Context, mobileNumber strin
 		users    domain.Users
 		usersDAO domain.UsersDAO
 	)
-	err := r.db.QueryRowContext(ctx, queryFetchUserDetails, mobileNumber).Scan(
+	err := r.db.QueryRow(ctx, queryFetchUserDetails, mobileNumber).Scan(
 		&usersDAO.UserID,
 		&usersDAO.FirstName,
 		&usersDAO.LastName,
@@ -86,7 +87,7 @@ func (r *usersRepository) Register(ctx context.Context, userData domain.UsersDTO
 	placeHolders := utils.GeneratePlaceHolders(len(params), 1)
 
 	query := fmt.Sprintf(queryInsertToUsers, strings.Join(columsToInsert, ","), placeHolders)
-	err := r.db.QueryRowContext(ctx, query, params...).Scan(&userID)
+	err := r.db.QueryRow(ctx, query, params...).Scan(&userID)
 	if err != nil {
 		return 0, err
 	}

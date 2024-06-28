@@ -25,6 +25,7 @@ const (
 	PlacesAPIEndPoint            = "https://api.geoapify.com/v2/places"
 	LocationDetailEndPoint       = "https://api.geoapify.com/v1/geocode/reverse"
 	Radius                       = 10000
+	Datelayout                   = "2006-01-02"
 )
 
 var (

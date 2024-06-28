@@ -1,6 +1,8 @@
 package weather
 
 import (
+	"encoding/json"
+	"log"
 	"trip-cast/constants"
 
 	"github.com/innotechdevops/openmeteo"
@@ -16,15 +18,24 @@ func NewWeatherService() *Weather {
 	}
 }
 
-func (weather Weather) GetWeatherDetails(params Params) (string, error) {
+func (weather Weather) GetWeatherDetails(params Params) (*WeatherResponse, error) {
 
 	weatherParams := getWeatherParams(params)
 
 	resp, err := weather.openMeteo.Execute(weatherParams)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return resp, nil
+
+	var response WeatherResponse
+
+	err = json.Unmarshal([]byte(resp), &response)
+	if err != nil {
+		log.Printf("unmarshal error in weather.go :%s\n", err.Error())
+		return nil, err
+	}
+
+	return &response, nil
 }
 
 func getWeatherParams(params Params) openmeteo.Parameter {

@@ -15,13 +15,11 @@ import (
 
 type weatherHandler struct {
 	usecase usecase.WeatherUsecase
-	weather *weather.Weather
 }
 
-func NewWeatherHandler(r *chi.Mux, weather *weather.Weather, usecase *usecase.WeatherUsecase) {
+func NewWeatherHandler(r *chi.Mux, usecase *usecase.WeatherUsecase) {
 	weatherHandler := weatherHandler{
 		usecase: *usecase,
-		weather: weather,
 	}
 	r.Post("/get-weather", weatherHandler.GetWeather)
 }
@@ -70,9 +68,9 @@ func (h weatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
 		weatherParams.EndDate = ""
 	}
 
-	responseString, err := h.weather.GetWeatherDetails(weatherParams)
+	weatherDetails, err := h.usecase.GetWeatherDetails(weatherParams)
 	if err != nil {
-		log.Printf("weather.GetWeatherDetails failed with error : %s", err.Error())
+		log.Printf("usecase.GetWeatherDetails failed with error: %s", err.Error())
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
 			Code:    http.StatusInternalServerError,
 			Message: err.Error(),
@@ -80,30 +78,7 @@ func (h weatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var response weather.WeatherResponse
-
-	err = json.Unmarshal([]byte(responseString), &response)
-	if err != nil {
-		log.Printf("unMarshalling response failed with error: %s", err.Error())
-		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
-			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
-		}})
-		return
-	}
-
-	err = h.usecase.AddAdditionalWeatherDetails(&response)
-
-	if err != nil {
-		log.Printf("addAdditionalWeatherDetails failed with error: %s", err.Error())
-		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
-			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
-		}})
-		return
-	}
-
-	api.Success(w, http.StatusOK, response)
+	api.Success(w, http.StatusOK, weatherDetails)
 
 }
 

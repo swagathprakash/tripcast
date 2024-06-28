@@ -1,9 +1,11 @@
 package database
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"log"
+
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type database struct {
@@ -14,7 +16,7 @@ type database struct {
 	DatabasePort     uint16
 }
 
-func NewDatabase(DatabaseUser, DatabasePassword, DatabaseName, DatabaseHost string, DatabasePort uint16) *sql.DB {
+func NewDatabase(DatabaseUser, DatabasePassword, DatabaseName, DatabaseHost string, DatabasePort uint16) *pgxpool.Pool {
 	dbdata := database{
 		DatabaseUser:     DatabaseUser,
 		DatabasePassword: DatabasePassword,
@@ -22,12 +24,11 @@ func NewDatabase(DatabaseUser, DatabasePassword, DatabaseName, DatabaseHost stri
 		DatabaseHost:     DatabaseHost,
 		DatabasePort:     DatabasePort,
 	}
-
-	db, err := sql.Open("postgres", getDatabaseURL(dbdata))
+	pool, err := pgxpool.Connect(context.Background(), getDatabaseURL(dbdata))
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
-	return db
+	return pool
 }
 
 func getDatabaseURL(db database) string {

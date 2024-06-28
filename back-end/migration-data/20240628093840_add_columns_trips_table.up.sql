@@ -1,0 +1,29 @@
+BEGIN;
+
+SET
+    search_path TO tripcast;
+
+ALTER TABLE
+    trips
+ADD
+    COLUMN IF NOT EXISTS start_location TEXT,
+ADD
+    COLUMN IF NOT EXISTS destination TEXT,
+ADD
+    COLUMN IF NOT EXISTS start_date TIMESTAMP,
+ADD
+    COLUMN IF NOT EXISTS end_date TIMESTAMP,
+ADD
+    COLUMN IF NOT EXISTS companions TEXT,
+ADD
+    COLUMN IF NOT EXISTS purpose TEXT,
+ADD
+    COLUMN IF NOT EXISTS itinerary JSON,
+ADD
+    COLUMN IF NOT EXISTS forecast JSON,
+ADD
+    COLUMN IF NOT EXISTS packing_items TEXT [],
+ADD
+    COLUMN IF NOT EXISTS safety_tips TEXT [];
+
+COMMIT;

@@ -2,59 +2,39 @@ package usecase
 
 import (
 	"encoding/json"
+	"log"
 	"trip-cast/internal/gemini"
 	"trip-cast/internal/weather"
-	"trip-cast/weather/usecase"
 )
 
 type ChatBotUsecase struct {
-	weather        *weather.Weather
-	weatherUsecase *usecase.WeatherUsecase
+	weather *weather.Weather
 }
 
-func NewUsersUsecase(weather *weather.Weather, weatherUsecase *usecase.WeatherUsecase) *ChatBotUsecase {
+func NewChatbotUsecase(weather *weather.Weather) *ChatBotUsecase {
 	return &ChatBotUsecase{
-		weather:        weather,
-		weatherUsecase: weatherUsecase,
+		weather: weather,
 	}
 }
 
-func (u ChatBotUsecase) ConvertToPrompt(request gemini.RequestParams) (string, error) {
+func (u ChatBotUsecase) BuildPrompt(weatherResponse *weather.WeatherResponse, request *gemini.RequestParams) (string, error) {
 
-	weatherParams := weather.Params{
-		Latitude:  request.Latitude,
-		Longitude: request.Longitude,
-		StartDate: request.StartDate,
-		EndDate:   request.EndDate,
-	}
-	responseString, err := u.weather.GetWeatherDetails(weatherParams)
-	if err != nil {
-		return "", err
-	}
-
-	var weatherResponse weather.WeatherResponse
-	err = json.Unmarshal([]byte(responseString), &weatherResponse)
-	if err != nil {
-		return "", err
-	}
-
-	u.weatherUsecase.AddAdditionalWeatherDetails(&weatherResponse)
-
-	for i, v := range weatherResponse.Daily.WeatherDetail {
+	// add weather details for the trip days
+	for i, v := range weatherResponse.Hourly.Time {
 		request.Forecast = append(request.Forecast,
 			gemini.RequestWeatherInfo{
-				Date:    weatherResponse.Daily.Time[i],
-				Weather: v,
+				Time:        v,
+				Weather:     weatherResponse.Hourly.WeatherDetail[i],
+				WeatherCode: weatherResponse.Hourly.WeatherCode[i],
 			},
 		)
 	}
 
 	jsonData, err := json.Marshal(request)
 	if err != nil {
+		log.Printf("chatbot usecase json marshal error:%s",err.Error())
 		return "", err
 	}
 
-	prompt := string(jsonData)
-
-	return prompt, nil
+	return string(jsonData), nil
 }

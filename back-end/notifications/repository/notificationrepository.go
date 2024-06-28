@@ -2,15 +2,17 @@ package repository
 
 import (
 	"context"
-	"database/sql"
+	"log"
 	"trip-cast/domain"
+
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type notificationRepository struct {
-	db *sql.DB
+	db *pgxpool.Pool
 }
 
-func NewNotificationRepository(db *sql.DB) domain.NotificationRepository {
+func NewNotificationRepository(db *pgxpool.Pool) domain.NotificationRepository {
 	return &notificationRepository{
 		db: db,
 	}
@@ -59,8 +61,9 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 		notification    domain.Notifications
 		notifications   []domain.Notifications
 	)
-	rows, err := r.db.QueryContext(ctx, queryFetchNotifications, userID)
+	rows, err := r.db.Query(ctx, queryFetchNotifications, userID)
 	if err != nil {
+		log.Printf("error while listing notification:%s",err.Error())
 		return nil, err
 	}
 	defer rows.Close()
@@ -75,6 +78,7 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 			&notificationDAO.CreatedAt,
 		)
 		if err != nil {
+					log.Printf("error while scaning rows in listing notification:%s",err.Error())
 			return nil, err
 		}
 		notificationDAO.MapToDomain(&notification)
@@ -86,7 +90,7 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 
 
 func (r *notificationRepository) DeleteNotification(ctx context.Context, notificationID uint64) error {
-	_, err := r.db.ExecContext(ctx, queryDeleteNotification, notificationID)
+	_, err := r.db.Exec(ctx, queryDeleteNotification, notificationID)
 	if err != nil {
 		return err
 	}
@@ -94,7 +98,7 @@ func (r *notificationRepository) DeleteNotification(ctx context.Context, notific
 }
 
 func (r *notificationRepository) UpdateNotifications(ctx context.Context, notificationID uint64) error {
-	_, err := r.db.ExecContext(ctx, queryUpdateNotification, notificationID)
+	_, err := r.db.Exec(ctx, queryUpdateNotification, notificationID)
 	if err != nil {
 		return err
 	}

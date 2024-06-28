@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"log"
 	"strings"
 	"time"
 	"trip-cast/constants"
@@ -10,19 +11,28 @@ import (
 
 type WeatherUsecase struct {
 	location *location.Location
+	weather  *weather.Weather
 }
 
-func NewWeatherUsecase(location *location.Location) *WeatherUsecase {
+func NewWeatherUsecase(location *location.Location, weather *weather.Weather) *WeatherUsecase {
 	return &WeatherUsecase{
 		location: location,
+		weather:  weather,
 	}
 }
 
-func (u WeatherUsecase) AddAdditionalWeatherDetails(response *weather.WeatherResponse) error {
+func (u WeatherUsecase) GetWeatherDetails(weatherParams weather.Params) (*weather.WeatherResponse, error) {
+
+	response, err := u.weather.GetWeatherDetails(weatherParams)
+	if err != nil {
+		log.Printf("u.weather.GetWeatherDetails with error %s", err.Error())
+		return nil, err
+	}
 
 	locationResponse, err := u.location.GetLocationDetails(response.Latitude, response.Longitude)
 	if err != nil {
-		return err
+		log.Printf("u.location.GetLocationDetails with error %s", err.Error())
+		return nil, err
 	}
 
 	response.CurrentWeather.WeatherDetail = weather.WMOCodesMap[response.CurrentWeather.WeatherCode]
@@ -36,13 +46,13 @@ func (u WeatherUsecase) AddAdditionalWeatherDetails(response *weather.WeatherRes
 	lenDailyWeather := len(response.Daily.WeatherCode)
 	location, err := time.LoadLocation(constants.TimeZoneAsiaKolkata)
 	if err != nil {
-		return err
+		log.Printf("load location error:%s", err.Error())
+		return nil, err
 	}
 	currentHour := time.Now().In(location).Hour()
 	response.CurrentWeather.ApparentTemperature = response.Hourly.ApparentTemperature[currentHour]
 	response.CurrentWeather.RelativeHumidity = response.Hourly.RelativeHumidity2M[currentHour]
 	response.CurrentWeather.Rain = response.Hourly.Rain[currentHour]
-
 
 	for i := 0; i < lenHourlyWeather; i++ {
 		hourlyWeatherCode := response.Hourly.WeatherCode[i]
@@ -54,6 +64,5 @@ func (u WeatherUsecase) AddAdditionalWeatherDetails(response *weather.WeatherRes
 		}
 	}
 
-
-	return nil
+	return response, nil
 }
