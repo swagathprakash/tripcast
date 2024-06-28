@@ -12,7 +12,9 @@ import (
 	"trip-cast/internal/gemini"
 	"trip-cast/internal/location"
 	"trip-cast/internal/sms"
+	"trip-cast/internal/utils"
 	"trip-cast/internal/weather"
+	"trip-cast/internal/workerpool"
 	"trip-cast/middlewares"
 	placesHandler "trip-cast/nearbyplaces/handler"
 	placesUsecase "trip-cast/nearbyplaces/usecase"
@@ -54,6 +56,14 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middlewares.SetContentType)
 	r.Use(corsHandler)
+
+	woorkerPool := workerpool.NewWorkerPool(env.MaxWorkers)
+	woorkerPool.Start()
+	woorkerPool.Add(workerpool.Task{
+		Func:             utils.BackgroundProcesses,
+		Ctx:              ctx,
+		IsResultExpected: false,
+	})
 
 	// setup services
 	smsService := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
