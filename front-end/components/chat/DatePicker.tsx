@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { View, Pressable, Text } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 interface MyDatePickerProps {
   setAnswers: React.Dispatch<React.SetStateAction<string>>;
   saveAnswer: (answer?: string) => void;
+  maxDate: Date | undefined;
+  setMaxDate: React.Dispatch<SetStateAction<Date | undefined>>;
 }
 
 const MyDatePicker: React.FC<MyDatePickerProps> = ({
   setAnswers,
   saveAnswer,
+  maxDate,
+  setMaxDate,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDateInternal] = useState(new Date()); // internal state for selected date
+  const dateToday = new Date();
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowPicker(false);
@@ -21,9 +26,11 @@ const MyDatePicker: React.FC<MyDatePickerProps> = ({
       setAnswers(formattedDate);
       setDateInternal(selectedDate);
       saveAnswer(formattedDate);
+      const dateLimit = new Date(selectedDate);
+      dateLimit.setDate(dateLimit.getDate() + 12);
+      setMaxDate(dateLimit);
     }
   };
-
   return (
     <View className="flex-1 items-end justify-center  pr-2">
       <Pressable onPress={() => setShowPicker(true)}>
@@ -33,6 +40,9 @@ const MyDatePicker: React.FC<MyDatePickerProps> = ({
       </Pressable>
       {showPicker && (
         <DateTimePicker
+          accentColor="#1f1e1e"
+          minimumDate={dateToday}
+          maximumDate={maxDate}
           value={date} // initial value (current date)
           mode="date" // choose 'date' for date picker
           display="default" // Android only, 'default' or 'spinner'

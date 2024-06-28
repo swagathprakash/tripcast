@@ -18,7 +18,7 @@ import { router } from "expo-router";
 
 const ChatFlow = () => {
   const dispatch = useAppDispatch();
-
+  const [maxDate,setMaxDate]=useState<Date|undefined>()
   const [communication, setCommunication] = useState<
     Array<{
       data: string;
@@ -145,7 +145,7 @@ const ChatFlow = () => {
               />
             )}
             {chat[currentQuestIndex].type === "Date" && (
-              <MyDatePicker saveAnswer={saveAnswer} setAnswers={setAnswers} />
+              <MyDatePicker setMaxDate={setMaxDate} maxDate={maxDate} saveAnswer={saveAnswer} setAnswers={setAnswers} />
             )}
             {chat[currentQuestIndex].type === "Search" && (
               <Pressable
