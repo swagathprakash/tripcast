@@ -10,7 +10,6 @@ import ChatFlow from './ChatFlow';
 const ChatPage = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useDispatch();
-
   return (
     <>
       {true ? (
