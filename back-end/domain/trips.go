@@ -9,6 +9,8 @@ import (
 type Trip struct {
 	TripID           int64
 	UserID           int64
+	Latitude         float64
+	Longitude        float64
 	StartingLocation string
 	Destination      string
 	StartDate        time.Time

@@ -39,6 +39,8 @@ type Forecast []struct {
 
 type Response struct {
 	StartingLocation string    `json:"starting_location"`
+	Latitude         float64   `json:"latitude"`
+	Longitude        float64   `json:"longitude"`
 	Destination      string    `json:"destination"`
 	StartDate        string    `json:"start_date"`
 	EndDate          string    `json:"end_date"`

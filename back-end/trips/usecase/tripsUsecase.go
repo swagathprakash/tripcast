@@ -57,6 +57,8 @@ func (u *tripsUsecase) InsertTripDetails(ctx context.Context, tripData domain.Tr
 	trip.UserID = tripData.UserID
 	trip.StartingLocation = data.StartingLocation
 	trip.Destination = data.Destination
+	trip.Latitude = data.Latitude
+	trip.Longitude = data.Longitude
 	trip.StartDate = ParsedStartDate
 	trip.EndDate = ParsedEndDate
 	trip.Companions = data.Companions
