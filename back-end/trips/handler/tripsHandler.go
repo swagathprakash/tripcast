@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 	"trip-cast/constants"
 	"trip-cast/domain"
 	"trip-cast/internal/api"
-	"trip-cast/internal/gemini"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -53,9 +53,7 @@ func (h *tripsHandler) SaveTrip(w http.ResponseWriter, r *http.Request) {
 func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 
 	responses := domain.TripsResponse{}
-	params := domain.TripRequestParams{}
-
-	err := json.NewDecoder(r.Body).Decode(&params)
+	params, err := parseFetchParams(r)
 	if err != nil {
 		api.Fail(w, http.StatusBadRequest, []api.Errors{{
 			Code:    http.StatusBadRequest,
@@ -81,7 +79,7 @@ func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, trip := range trips {
-		response := gemini.Response{}
+		response := domain.TripsDetailsResponse{}
 		trip.MapFromDomain(&response)
 
 		if params.TripID != 0 {
@@ -97,4 +95,33 @@ func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 	}
 
 	api.Success(w, http.StatusOK, responses)
+}
+
+func parseFetchParams(r *http.Request) (domain.TripRequestParams, error) {
+
+	var params domain.TripRequestParams
+
+	userIDParam := r.URL.Query().Get("user_id")
+	if userIDParam != "" {
+		userID, err := strconv.ParseUint(userIDParam, 10, 64)
+		if err != nil {
+			return domain.TripRequestParams{}, err
+		}
+		params.UserID = int64(userID)
+	}
+
+	tripIDParam := r.URL.Query().Get("trip_id")
+	if tripIDParam != "" {
+		tripID, err := strconv.ParseUint(tripIDParam, 10, 64)
+		if err != nil {
+			return domain.TripRequestParams{}, err
+		}
+		params.TripID = int64(tripID)
+	}
+
+	if tripIDParam == "" && userIDParam == "" {
+		return domain.TripRequestParams{}, constants.ErrBadRequest
+	}
+
+	return params, nil
 }
