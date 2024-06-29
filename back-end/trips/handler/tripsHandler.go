@@ -89,7 +89,9 @@ func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		// seperate finished and upcomming trips
-		if trip.EndDate.After(time.Now().AddDate(0, 0, 1)) {
+		EndDateTruncated := time.Date(trip.EndDate.Year(), trip.EndDate.Month(), trip.EndDate.Day(), 0, 0, 0, 0, trip.EndDate.Location())
+		currentDate := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.Now().Location())
+		if EndDateTruncated.Before(currentDate) {
 			responses.Finished = append(responses.Finished, response)
 			continue
 		}
