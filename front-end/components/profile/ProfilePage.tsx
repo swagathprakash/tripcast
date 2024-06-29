@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/slice/authSlice";
 import { router } from "expo-router";
 import { storeData } from "@/libs/utils";
+import LoginButtonCard from "../LoginButtonCard";
 
 const ProfilePage = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -70,27 +71,7 @@ const ProfilePage = () => {
           </View>
         </View>
       ) : (
-        <View className="m-3 bg-white shadow-md shadow-gray-500 rounded-md ">
-          <View className="px-3 py-3 border-b-[1px] flex-row justify-between items-center border-b-gray-100">
-            <Text className="text-xs font-semibold text-gray-500">
-              Please login to view profile details
-            </Text>
-          </View>
-          <View className="flex-1">
-            <Pressable
-              className="m-3 mb-5  bg-primary rounded-md shadow-md shadow-black justify-center py-2"
-              onPress={() => {
-                storeData("");
-                dispatch(clearUser({}));
-                router.push("/");
-              }}
-            >
-              <Text className="w-full text-center text-white text-lg font-bold">
-                Log In
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+        <LoginButtonCard headerText="Please login to view profile details"/>
       )}
       <View className="m-3 mb-10 bg-white shadow-md shadow-gray-500 rounded-md ">
         <View className="px-3 py-3 border-b-[1px] flex-row justify-between items-center border-b-gray-100">
