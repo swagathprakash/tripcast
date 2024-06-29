@@ -6,7 +6,7 @@ import { useLocalSearchParams } from 'expo-router'
 
 const ItenaryDays = () => {
     const { tripId } = useLocalSearchParams();
-
+    
     return (
         <SafeAreaView>
             <ScrollView className="min-h-screen">

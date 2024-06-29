@@ -6,6 +6,10 @@ import Sunny from "../assets/icons/sunny.png";
 import Rainy from "../assets/icons/rainy.png";
 import Cloudy from "../assets/icons/cloudy.png";
 import Thunderstorm from "../assets/icons/thunderstorm.png";
+import single from "../assets/icons/single.png";
+import couple from "../assets/icons/couple.png";
+import friends from "../assets/icons/friends.png";
+import family from "../assets/icons/family.png";
 
 export default {
   bookmark,
@@ -16,4 +20,8 @@ export default {
   Rainy,
   Cloudy,
   Thunderstorm,
+  single,
+  couple,
+  friends,
+  family
 };
