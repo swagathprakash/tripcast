@@ -1,87 +1,34 @@
-import { View, Text, Pressable, Image } from "react-native";
-import React, { useState, useEffect } from "react";
+import { View, Text, Pressable, Image, ActivityIndicator } from "react-native";
+import React, { useEffect } from "react";
 import Octicons from "@expo/vector-icons/Octicons";
-import { images } from "@/constants";
+import { endpoints, images } from "@/constants";
 import { router } from "expo-router";
 import moment from "moment";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { fetchNotification } from "@/store/slice/notificationSlice";
+import axios from "axios";
 
 const NotificationPage = () => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      header: "Notification 1",
-      date: "2024-06-27T10:00:00",
-      read: false,
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid velit qui doloremque dolorum! Saepe rerum architecto at velit! Dolore, deleniti rem. Voluptatem cupiditate accusantium autem similique perspiciatis laborum maxime illo.",
-    },
-    {
-      id: 2,
-      header: "Notification 2",
-      read: false,
-      date: "2024-06-28T10:00:00",
-      content:
-        "Lorem ipsum dolor sit amet, laborum maxime illo. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid ",
-    },
-    {
-      id: 3,
-      header: "Notification 3",
-      read: true,
-      date: "2024-06-28T12:00:00",
-      content:
-        "molestiae harum aspernatur sint enim nisi sequi ut voluptas obcaecati, suscipit deserunt ducimus velit adipisci nobis laborum fugit rerum assumenda quaerat! Quidem sunt molestiae vitae nihil.",
-    },
-    {
-      id: 4,
-      header: "Notification 4",
-      read: false,
-      date: "2024-06-25T10:00:00",
-      content: "Lorem, ipsum.",
-    },
-  ]);
+  const { user } = useAppSelector((state) => state.auth);
+  const { notifications, loading } = useAppSelector(
+    (state) => state.notification
+  );
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const sortedNotifications = [...notifications].sort((a, b) => {
-      if (a.read === b.read) {
-        return moment(b.date).diff(moment(a.date));
-      } else {
-        return a.read ? 1 : -1;
-      }
-    });
-    setNotifications(sortedNotifications);
-  }, []);
+    if (user) {
+      dispatch(fetchNotification(user.user_id));
+    }
+  }, [user]);
 
-  const markAllAsRead = () => {
-    const updatedNotifications = notifications.map((notification) => ({
-      ...notification,
-      read: true,
-    }));
-    const sortedNotifications = updatedNotifications.sort((a, b) => {
-      if (a.read === b.read) {
-        return moment(b.date).diff(moment(a.date));
-      } else {
-        return a.read ? 1 : -1;
-      }
-    });
-    setNotifications(sortedNotifications);
-  };
-
-  const clearAllNotifications = () => {
-    setNotifications([]);
-  };
+  const markAllAsRead = () => {};
 
   const handlePressNotification = (id: number) => {
-    const updatedNotifications = notifications.map((notification) =>
-      notification.id === id ? { ...notification, read: true } : notification
+    const updatedNotifications = notifications?.map((notification) =>
+      notification.notification_id === id
+        ? { ...notification, read: true }
+        : notification
     );
-    const sortedNotifications = updatedNotifications.sort((a, b) => {
-      if (a.read === b.read) {
-        return moment(b.date).diff(moment(a.date));
-      } else {
-        return a.read ? 1 : -1;
-      }
-    });
-    setNotifications(sortedNotifications);
   };
 
   const formatDate = (date: moment.MomentInput) => {
@@ -98,14 +45,27 @@ const NotificationPage = () => {
     }
   };
 
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read
+  const markAsRead = async (notification_id: number) => {
+    try {
+      const response = await axios.patch(
+        `${endpoints.BACKEND_URL}/notifications`,
+        { notification_id }
+      );
+      return true;
+    } catch {
+      console.log("Error occured");
+    }
+  };
+
+  const unreadCount = notifications?.filter(
+    (notification) => !notification.is_read
   ).length;
   const allRead = unreadCount == 0;
-
-  return (
-    <>
-      {notifications.length === 0 ? (
+  return loading ? (
+    <ActivityIndicator size={"large"} color={"#1f1e1e"} className="my-52" />
+  ) : (
+    <View>
+      {notifications?.length === 0 ? (
         <View className="flex h-[75vh] justify-center items-center">
           <Image
             source={images.noNotification}
@@ -135,20 +95,20 @@ const NotificationPage = () => {
             )}
           </View>
           <View className="flex-col gap-2">
-            {notifications.map((item) => {
+            {notifications?.map((item) => {
               return (
                 <Pressable
                   onPress={() => {
-                    handlePressNotification(item.id);
+                    markAsRead(item.notification_id);
                     router.push({
                       pathname: "/notification-details",
                       params: {
-                        date: formatDate(item.date),
-                        content: item.content,
+                        date: formatDate(item.created_at),
+                        notification_id: item.notification_id,
                       },
                     });
                   }}
-                  key={item.id}
+                  key={item.notification_id}
                   className="flex-1 bg-white shadow-sm shadow-gray-500 rounded-xl"
                 >
                   <View className="px-3 py-4 gap-3 flex-col justify-center flex-1 flex-wrap">
@@ -156,7 +116,7 @@ const NotificationPage = () => {
                       <View className="flex-row justify-between w-full">
                         <Text
                           className={
-                            item.read
+                            item.is_read
                               ? "text-lg text-gray-500 font-semibold"
                               : "text-lg text-primary font-semibold"
                           }
@@ -166,14 +126,14 @@ const NotificationPage = () => {
                         <View className="flex-row items-center gap-2 pr-2">
                           <Text
                             className={
-                              item.read
+                              item.is_read
                                 ? "text-xs text-gray-500 font-semibold"
                                 : "text-xs text-primary font-semibold"
                             }
                           >
-                            {formatDate(item.date)}
+                            {formatDate(item.created_at)}
                           </Text>
-                          {item.read ? (
+                          {item.is_read ? (
                             ""
                           ) : (
                             <Octicons
@@ -186,7 +146,7 @@ const NotificationPage = () => {
                       </View>
                       <Text
                         className={
-                          item.read
+                          item.is_read
                             ? "text-xs text-gray-400 font-medium pt-2"
                             : "text-xs text-gray-700 font-medium pt-2"
                         }
@@ -201,7 +161,7 @@ const NotificationPage = () => {
           </View>
         </View>
       )}
-    </>
+    </View>
   );
 };
 

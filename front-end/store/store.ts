@@ -3,6 +3,7 @@ import authSlice from "./slice/authSlice";
 import locationSlice from "./slice/locationSlice";
 import placesSlice from "./slice/placesSlice";
 import itenararySlice from "./slice/itenararySlice";
+import notificationSlice from "./slice/notificationSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     location: locationSlice,
     places: placesSlice,
     itenrary: itenararySlice,
+    notification: notificationSlice,
   },
 });
 
