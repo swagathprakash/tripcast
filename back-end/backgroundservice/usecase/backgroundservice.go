@@ -35,7 +35,7 @@ func (u *backGroundServiceUsecase) BackgroundNotificationProcesses(params any) (
 		return nil, constants.ErrBackgroundNotificationParams
 	}
 	ctx := context.Background()
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(time.Hour)
 
 	offset := 0
 
