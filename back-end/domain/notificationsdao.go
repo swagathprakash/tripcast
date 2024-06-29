@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"encoding/json"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -11,6 +13,7 @@ type NotificationDAO struct {
 	UserID         pgtype.Int8
 	IsRead         pgtype.Bool
 	CreatedAt      pgtype.Timestamp
+	WeatherChange  pgtype.Text
 }
 
 func (dao *NotificationDAO) MapToDomain(domain *Notifications) {
@@ -20,4 +23,5 @@ func (dao *NotificationDAO) MapToDomain(domain *Notifications) {
 	domain.UserID = uint64(dao.UserID.Int64)
 	domain.IsRead = dao.IsRead.Bool
 	domain.CreatedAt = dao.CreatedAt.Time
+	domain.WeatherChange = json.RawMessage(dao.WeatherChange.String)
 }

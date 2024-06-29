@@ -39,7 +39,7 @@ func (h *notificationHandler) List(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
 			Code:    http.StatusInternalServerError,
-			Message: constants.ErrInternalServerError.Error(),
+			Message: err.Error(),
 		}})
 		return
 	}
@@ -87,7 +87,7 @@ func (h *notificationHandler) Update(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
 			Code:    http.StatusInternalServerError,
-			Message: constants.ErrInternalServerError.Error(),
+			Message: err.Error(),
 		}})
 		return
 	}

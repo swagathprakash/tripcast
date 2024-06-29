@@ -30,7 +30,8 @@ const (
 		n.trip_id,
 		n.user_id,
 		n.is_read,
-		n.created_at
+		n.created_at,
+		n.weather_change
 	FROM
 		notifications n
 	JOIN
@@ -38,7 +39,7 @@ const (
 	ON
 		n.trip_id = t.trip_id
 	WHERE
-		n.user_id = $1;
+		n.user_id = $1 and end_date::DATE >= NOW()::DATE;
 	`
 
 	queryDeleteNotification = `
@@ -65,6 +66,7 @@ const (
 	content = EXCLUDED.content,
     trip_id = EXCLUDED.trip_id,
     user_id = EXCLUDED.user_id,
+	weather_change = EXCLUDED.weather_change,
     created_at = EXCLUDED.created_at;
 	`
 )
@@ -74,6 +76,7 @@ var columnsToInsert = []string{
 	"trip_id",
 	"user_id",
 	"created_at",
+	"weather_change",
 }
 
 func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]domain.Notifications, error) {
@@ -98,6 +101,7 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 			&notificationDAO.UserID,
 			&notificationDAO.IsRead,
 			&notificationDAO.CreatedAt,
+			&notificationDAO.WeatherChange,
 		)
 		if err != nil {
 			log.Printf("error while scaning rows in listing notification:%s", err.Error())
@@ -133,6 +137,7 @@ func (r *notificationRepository) Insert(ctx context.Context, notification domain
 		notification.TripID,
 		notification.UserID,
 		time.Now(),
+		notification.WeatherChange,
 	}
 
 	placeHolders := utils.GeneratePlaceHolders(len(columnsToInsert), 1)
