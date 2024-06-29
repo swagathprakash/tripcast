@@ -11,7 +11,7 @@ const TripPage = () => {
         <View className="w-full p-5 justify-start h-full">
             <View>
                 <Text className="text-primary text-xl font-bold">Trip Planning</Text>
-                <Text className='text-primary text-base my-2'>Create memories, embrace adventures, and discover the world like never before with our personalized travel itinerary app.</Text>
+                <Text className='text-gray-600 text-justify text-sm font-medium my-2'>Create memories, embrace adventures, and discover the world like never before with our personalized travel itinerary app.</Text>
             </View>
             <View className='w-full'>
                 <TabBar sectionLabel={sectionLabel} sectionBody={sectionBody} page='plan' />

@@ -84,7 +84,7 @@ const ChatFlow = () => {
 
   return (
     <>
-      <View className=" px-4 justify-between ">
+      <View className=" px-4 justify-between pt-14 ">
         <View>
           {communication.map(({ data, type, choice }, index) => {
             return (

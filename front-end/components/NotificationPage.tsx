@@ -7,6 +7,7 @@ import moment from "moment";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchNotification } from "@/store/slice/notificationSlice";
 import axios from "axios";
+import LoginButtonCard from "./LoginButtonCard";
 
 const NotificationPage = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -63,8 +64,8 @@ const NotificationPage = () => {
   const allRead = unreadCount == 0;
   return loading ? (
     <ActivityIndicator size={"large"} color={"#1f1e1e"} className="my-52" />
-  ) : (
-    <View>
+  ) : (user?
+    <View className="px-5">
       {notifications?.length === 0 ? (
         <View className="flex h-[75vh] justify-center items-center">
           <Image
@@ -161,7 +162,9 @@ const NotificationPage = () => {
           </View>
         </View>
       )}
-    </View>
+    </View>:<View className="mt-4">
+      <LoginButtonCard headerText="Please login to view notifications"/>
+      </View>
   );
 };
 
