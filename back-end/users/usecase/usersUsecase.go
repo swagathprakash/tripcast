@@ -2,14 +2,14 @@ package usecase
 
 import (
 	"context"
-	// "fmt"
+	"fmt"
 	"log"
-	// "math/rand"
+	"math/rand"
 	"time"
 	"trip-cast/constants"
 	"trip-cast/domain"
 	"trip-cast/internal/sms"
-	// "trip-cast/internal/utils"
+	"trip-cast/internal/utils"
 )
 
 type usersUsecase struct {
@@ -42,17 +42,16 @@ func (u *usersUsecase) GetUserDetails(ctx context.Context, mobileNumber string) 
 
 func (u *usersUsecase) GenerateOTP(mobileNumber string) error {
 
-	// uncomment the code for OTP generation
-	// otp := rand.Intn(constants.MaxValueOfOTP-constants.MinValueOfOTP+1) + constants.MinValueOfOTP
-	// mobileNumberWithInidanCountryCode := utils.ConvertToIndianMobileNumberFormat(mobileNumber)
-	// err := u.sms.SentSMS(fmt.Sprintf(constants.OTPMessage, otp), mobileNumberWithInidanCountryCode)
-	// if err != nil {
-	// 	log.Println("failed to sent otp with error", err)
-	// 	return err
-	// }
+	otp := rand.Intn(constants.MaxValueOfOTP-constants.MinValueOfOTP+1) + constants.MinValueOfOTP
+	mobileNumberWithInidanCountryCode := utils.ConvertToIndianMobileNumberFormat(mobileNumber)
+	err := u.sms.SentSMS(fmt.Sprintf(constants.OTPMessage, otp), mobileNumberWithInidanCountryCode)
+	if err != nil {
+		log.Println("failed to sent otp with error", err)
+		return err
+	}
 
 	otpMap[mobileNumber] = otpInfo{
-		otp: 1234,
+		otp: otp,
 		exp: time.Now().Add(2 * time.Minute),
 	}
 	return nil
