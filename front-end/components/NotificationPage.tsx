@@ -104,16 +104,18 @@ const NotificationPage = () => {
                   <View className="px-3 py-4 gap-3 flex-col justify-center flex-1 flex-wrap">
                     <View className="">
                       <View className="flex-row justify-between w-full">
-                        <Text
-                          className={
-                            item.is_read
-                              ? "text-lg text-gray-500 font-semibold"
-                              : "text-lg text-primary font-semibold"
-                          }
-                        >
-                          Weather Changed 😶
-                        </Text>
-                        <Text>{item.destination}</Text>
+                        <View>
+                          <Text
+                            className={
+                              item.is_read
+                                ? "text-lg text-gray-500 font-semibold"
+                                : "text-lg text-primary font-semibold"
+                            }
+                          >
+                            Weather Changed 😶
+                          </Text>
+                          <Text>{item.destination}</Text>
+                        </View>
                         <View className="flex-row items-center gap-2 pr-2">
                           <Text
                             className={
