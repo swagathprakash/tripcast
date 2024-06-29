@@ -1,6 +1,7 @@
-import { View, Text, Pressable, Image, ActivityIndicator } from "react-native";
-import React, { useEffect } from "react";
+import { View, Text, Pressable, Image, ActivityIndicator, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
 import Octicons from "@expo/vector-icons/Octicons";
+import { Ionicons } from '@expo/vector-icons';
 import { endpoints, images } from "@/constants";
 import { router } from "expo-router";
 import moment from "moment";
@@ -10,6 +11,7 @@ import axios from "axios";
 import LoginButtonCard from "./LoginButtonCard";
 
 const NotificationPage = () => {
+  const [reload, setReload] = useState(false);
   const { user } = useAppSelector((state) => state.auth);
   const { notifications, loading } = useAppSelector(
     (state) => state.notification
@@ -20,17 +22,7 @@ const NotificationPage = () => {
     if (user) {
       dispatch(fetchNotification(user.user_id));
     }
-  }, [user]);
-
-  const markAllAsRead = () => {};
-
-  const handlePressNotification = (id: number) => {
-    const updatedNotifications = notifications?.map((notification) =>
-      notification.notification_id === id
-        ? { ...notification, read: true }
-        : notification
-    );
-  };
+  }, [user, reload]);
 
   const formatDate = (date: moment.MomentInput) => {
     const notificationDate = moment(date);
@@ -64,7 +56,7 @@ const NotificationPage = () => {
   const allRead = unreadCount == 0;
   return loading ? (
     <ActivityIndicator size={"large"} color={"#1f1e1e"} className="my-52" />
-  ) : (user?
+  ) : (user ?
     <View className="px-5">
       {notifications?.length === 0 ? (
         <View className="flex h-[75vh] justify-center items-center">
@@ -87,13 +79,10 @@ const NotificationPage = () => {
             <Text className="text-xl font-semibold text-primary">
               Notifications ({unreadCount})
             </Text>
-            {!allRead && (
-              <Pressable onPress={markAllAsRead}>
-                <Text className="font-light text-sm tracking-tighter text-red-500">
-                  Mark all as read
-                </Text>
-              </Pressable>
-            )}
+            <TouchableOpacity className='items-end' onPress={() => setReload(!reload)}>
+              <Ionicons name="reload" size={20} color="#1f1e1e" />
+            </TouchableOpacity>
+
           </View>
           <View className="flex-col gap-2">
             {notifications?.map((item) => {
@@ -124,6 +113,7 @@ const NotificationPage = () => {
                         >
                           Weather Changed 😶
                         </Text>
+                        <Text>{item.destination}</Text>
                         <View className="flex-row items-center gap-2 pr-2">
                           <Text
                             className={
@@ -162,9 +152,9 @@ const NotificationPage = () => {
           </View>
         </View>
       )}
-    </View>:<View className="mt-4">
-      <LoginButtonCard headerText="Please login to view notifications"/>
-      </View>
+    </View> : <View className="mt-4">
+      <LoginButtonCard headerText="Please login to view notifications" />
+    </View>
   );
 };
 

@@ -18,7 +18,8 @@ export const fetchNotification: any = createAsyncThunk(
 
 type Notification = {
   notification_id: number;
-  uder_id: number;
+  destination: string;
+  user_id: number;
   is_read: boolean;
   created_at: string;
   content: string;

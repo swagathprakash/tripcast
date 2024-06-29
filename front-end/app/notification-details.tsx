@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "@/components/Logo";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useAppSelector } from "@/store";
 
 const NotificationDetails = () => {
@@ -43,7 +43,7 @@ const NotificationDetails = () => {
               <Text className="text-base text-gray-700 mb-4">
                 {notification?.content}
               </Text>
-              <Pressable className="mt-auto bg-primary py-3 rounded-lg">
+              <Pressable className="mt-auto bg-primary py-3 rounded-lg" onPress={()=> router.push("/create")}>
                 <Text className="text-center text-white text-lg font-semibold">
                   Regenerate Trip
                 </Text>

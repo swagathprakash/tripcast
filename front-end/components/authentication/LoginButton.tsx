@@ -19,8 +19,6 @@ const LoginButton = ({
 
   const getOtp = async (number: string) => {
     const fetchUrl = `${getOtpUrl}?phone=${number}`;
-    console.log("URLLL:", fetchUrl);
-    
     const result = await axios.get(fetchUrl).catch((err) => {
       console.log(err);
     });
