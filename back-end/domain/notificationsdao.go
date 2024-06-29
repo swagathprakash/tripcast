@@ -14,6 +14,7 @@ type NotificationDAO struct {
 	IsRead         pgtype.Bool
 	CreatedAt      pgtype.Timestamp
 	WeatherChange  pgtype.Text
+	Destination    pgtype.Text
 }
 
 func (dao *NotificationDAO) MapToDomain(domain *Notifications) {
@@ -24,4 +25,5 @@ func (dao *NotificationDAO) MapToDomain(domain *Notifications) {
 	domain.IsRead = dao.IsRead.Bool
 	domain.CreatedAt = dao.CreatedAt.Time
 	domain.WeatherChange = json.RawMessage(dao.WeatherChange.String)
+	domain.Destination = dao.Destination.String
 }

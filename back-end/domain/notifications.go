@@ -14,6 +14,7 @@ type Notifications struct {
 	IsRead         bool
 	WeatherChange  json.RawMessage
 	CreatedAt      time.Time
+	Destination    string
 }
 
 type NotificationRepository interface {

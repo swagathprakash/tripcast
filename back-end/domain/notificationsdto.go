@@ -14,6 +14,7 @@ type NotificationsDTO struct {
 	IsRead         bool            `json:"is_read"`
 	CreatedAt      time.Time       `json:"created_at"`
 	WeatherChange  json.RawMessage `json:"weather_change"`
+	Destination    string          `json:"destination"`
 }
 
 type NotificationModifyRequest struct {
@@ -33,6 +34,7 @@ func (dto *NotificationsDTO) MapFromDomain(domain Notifications) {
 	dto.IsRead = domain.IsRead
 	dto.CreatedAt = domain.CreatedAt
 	dto.WeatherChange = domain.WeatherChange
+	dto.Destination = domain.Destination
 }
 
 type WeatherChangeResponse struct {

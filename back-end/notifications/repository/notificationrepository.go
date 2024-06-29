@@ -31,7 +31,8 @@ const (
 		n.user_id,
 		n.is_read,
 		n.created_at,
-		n.weather_change
+		n.weather_change,
+		t.destination
 	FROM
 		notifications n
 	JOIN
@@ -102,6 +103,7 @@ func (r *notificationRepository) List(ctx context.Context, userID uint64) ([]dom
 			&notificationDAO.IsRead,
 			&notificationDAO.CreatedAt,
 			&notificationDAO.WeatherChange,
+			&notificationDAO.Destination,
 		)
 		if err != nil {
 			log.Printf("error while scaning rows in listing notification:%s", err.Error())
