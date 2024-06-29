@@ -6,6 +6,11 @@ export const authenticateUser: any = createAsyncThunk(
   "tripCast/login",
   async (loginDetails: { phone: string }, { rejectWithValue }) => {
     try {
+      console.log(
+        "URL",
+        `${endpoints.BACKEND_URL}/users?phone=${loginDetails.phone}`
+      );
+
       const response = await axios.get(
         `${endpoints.BACKEND_URL}/users?phone=${loginDetails.phone}`
       );
@@ -49,7 +54,7 @@ const authSlice = createSlice({
       result.firstName = action.payload?.data?.first_name;
       result.lastName = action.payload?.data?.last_name;
       result.phone = action.payload?.data?.phone;
-      result.user_id = action.payload?.data?.user_id
+      result.user_id = action.payload?.data?.user_id;
       state.user = result;
       state.loading = false;
       state.error = undefined;

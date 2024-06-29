@@ -11,7 +11,7 @@ type TripDetails = {
   companions: string;
   purpose: string;
   duration: number;
-  itinerary:Itenary[];
+  itinerary: Itenary[];
   forecast: {
     time: string;
     weather_code: number;
@@ -20,6 +20,25 @@ type TripDetails = {
   packingRecommendations: string[];
   safetyTips: string[];
 };
+export type TripDetailsWithId = {
+  trip_id: number;
+  starting_location: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  companions: string;
+  purpose: string;
+  duration: number;
+  itinerary: Itenary[];
+  forecast: {
+    time: string;
+    weather_code: number;
+    weather: string;
+  }[];
+  packingRecommendations: string[];
+  safetyTips: string[];
+};
+
 export const generateItinaray = createAsyncThunk(
   "tripCast/generateItinaray",
   async (
@@ -36,7 +55,6 @@ export const generateItinaray = createAsyncThunk(
     },
     { rejectWithValue }
   ) => {
-    console.log("req", itinaray);
     try {
       const response = await fetch(`${endpoints.BACKEND_URL}/ask-model`, {
         body: JSON.stringify(itinaray),
@@ -70,23 +88,61 @@ export const saveItinaray = createAsyncThunk(
     }
   }
 );
+export const fetchAllItinaray = createAsyncThunk(
+  "tripCast/fetchAllItinaray",
+  async (user_id: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${endpoints.BACKEND_URL}/trip?user_id=${user_id}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+export const fetchItinarayById = createAsyncThunk(
+  "tripCast/fetchItinarayById",
+  async (tripId: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${endpoints.BACKEND_URL}/trip?trip_id=${tripId}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
 
 type ItinararySlice = {
   loading: boolean;
   error?: object;
   tripDetails?: TripDetails;
+  saved: boolean;
+  upcoming?: TripDetailsWithId[];
+  finished?: TripDetailsWithId[];
+  selectedTrip?: TripDetailsWithId;
 };
 
 const initialState: ItinararySlice = {
   loading: false,
   error: undefined,
   tripDetails: undefined,
+  saved: false,
+  upcoming: undefined,
+  finished: undefined,
+  selectedTrip: undefined,
 };
 
 const itinararySlice = createSlice({
   name: "loginData",
   initialState,
-  reducers: {},
+  reducers: {
+    clearTripDetails: (state, action) => {
+      state.tripDetails = undefined;
+    },
+  },
   extraReducers(builder) {
     builder.addCase(generateItinaray.pending, (state: ItinararySlice) => {
       state.loading = true;
@@ -95,7 +151,6 @@ const itinararySlice = createSlice({
       state.loading = false;
       state.error = undefined;
       state.tripDetails = action.payload.data;
-      // console.log("generate Itinaray", state.tripDetails);
     });
     builder.addCase(generateItinaray.rejected, (state, action) => {
       state.loading = false;
@@ -107,13 +162,39 @@ const itinararySlice = createSlice({
     builder.addCase(saveItinaray.fulfilled, (state, action) => {
       state.loading = false;
       state.error = undefined;
+      state.saved = action.payload.data && true
     });
     builder.addCase(saveItinaray.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload ?? "";
+    });
+    builder.addCase(fetchAllItinaray.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchAllItinaray.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.upcoming = action.payload.data.upcoming;
+      state.finished = action.payload.data.finished;
+    });
+    builder.addCase(fetchAllItinaray.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload ?? "";
+    });
+    builder.addCase(fetchItinarayById.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchItinarayById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.selectedTrip = action.payload.data.trip_datails;
+    });
+    builder.addCase(fetchItinarayById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload ?? "";
     });
   },
 });
 
-export const itinararyActions = itinararySlice.actions;
+export const { clearTripDetails } = itinararySlice.actions;
 export default itinararySlice.reducer;

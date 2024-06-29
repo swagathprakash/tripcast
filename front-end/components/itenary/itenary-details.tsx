@@ -6,12 +6,12 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { router } from "expo-router";
 import { getCategory } from "@/libs/utils";
 import { icons } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { saveItinaray } from "@/store/slice/itenararySlice";
+import { fetchItinarayById, saveItinaray } from "@/store/slice/itenararySlice";
 
 const ItenaryDetails = ({
   tripId,
@@ -19,11 +19,12 @@ const ItenaryDetails = ({
   tripId?: string | string[] | undefined;
 }) => {
   const dispatch = useAppDispatch();
-  const { tripDetails, loading } = useAppSelector((state) => state.itenrary);
+  const { tripDetails, loading, selectedTrip } = useAppSelector((state) => state.itenrary);
   const { user, loading: userLoading } = useAppSelector((state) => state.auth);
+  useEffect(() => {
+    tripId && dispatch(fetchItinarayById(parseInt(tripId as string)))
+  }, [])
   const saveItinerary = () => {
-    console.log("save", loading, userLoading);
-
     !loading &&
       !userLoading &&
       user &&
@@ -32,15 +33,17 @@ const ItenaryDetails = ({
       dispatch(
         saveItinaray({ userId: user.user_id, tripDetails: tripDetails })
       );
+    router.push("/create")
   };
+  const tripData = tripId ? selectedTrip : tripDetails;
   return (
     <>
       {loading ? (
         <ActivityIndicator />
-      ) : tripDetails ? (
+      ) : tripData ? (
         <View>
           <Text className="text-4xl py-5 font-semibold text-primary px-5">
-            {tripDetails.destination}
+            {tripData.destination}
           </Text>
           <View className="px-3 py-5 flex-row gap-2 justify-start flex-wrap m-3 bg-white rounded-md border-[1px] border-gray-100 shadow-md shadow-gray-300 ">
             <View className=" w-36 my-2">
@@ -48,7 +51,7 @@ const ItenaryDetails = ({
                 Companion
               </Text>
               <Text className="text-lg text-primary font-semibold">
-                {tripDetails.companions}
+                {tripData.companions}
               </Text>
             </View>
             <View className=" w-36 my-2">
@@ -56,13 +59,13 @@ const ItenaryDetails = ({
                 Duration
               </Text>
               <Text className="text-lg text-primary font-semibold">
-                {tripDetails.duration} days
+                {tripData.duration} days
               </Text>
             </View>
             <View className=" w-36 my-2">
               <Text className="text-xs text-gray-400 font-medium">Purpose</Text>
               <Text className="text-lg text-primary font-semibold">
-                {tripDetails.purpose}
+                {tripData.purpose}
               </Text>
             </View>
             <View className=" w-36 my-2">
@@ -70,7 +73,7 @@ const ItenaryDetails = ({
                 Starting location
               </Text>
               <Text className="text-lg text-primary font-semibold">
-                {tripDetails.starting_location}
+                {tripData.starting_location}
               </Text>
             </View>
           </View>
@@ -82,7 +85,7 @@ const ItenaryDetails = ({
             </View>
             <View className="flex-1 overflow-hidden p-5">
               <ScrollView horizontal className="flex-1 gap-4 pl-1 pb-[5px]">
-                {tripDetails.forecast.map((item, index) => {
+                {tripData?.forecast.map((item, index) => {
                   const category = getCategory(item.weather_code);
                   const day = new Date(item.time).getDate();
                   const month = new Date(item.time).getMonth();
@@ -104,10 +107,10 @@ const ItenaryDetails = ({
                           category === "Sunny"
                             ? icons.Sunny
                             : category === "Cloudy"
-                            ? icons.Cloudy
-                            : category === "Rainy"
-                            ? icons.Rainy
-                            : icons.Thunderstorm
+                              ? icons.Cloudy
+                              : category === "Rainy"
+                                ? icons.Rainy
+                                : icons.Thunderstorm
                         }
                       />
                       <Text
@@ -138,14 +141,14 @@ const ItenaryDetails = ({
                   View Details
                 </Text>
               </Pressable>
-              <Pressable
+              {!tripId && <Pressable
                 className="m-3 mt-0 mb-5  bg-primary rounded-md shadow-md shadow-gray-500 justify-center py-2"
                 onPress={saveItinerary}
               >
                 <Text className="w-full text-center text-white text-lg font-bold">
                   Save Itinerary
                 </Text>
-              </Pressable>
+              </Pressable>}
             </View>
           </View>
           <View className=" flex-wrap m-3 bg-white rounded-md border-[1px] border-gray-100 shadow-md shadow-gray-300 ">
@@ -155,7 +158,7 @@ const ItenaryDetails = ({
               </Text>
             </View>
             <View className="py-3 px-5">
-              {tripDetails.packingRecommendations.map((item, index) => {
+              {tripData?.packingRecommendations.map((item, index) => {
                 return (
                   <View
                     key={index}
@@ -177,7 +180,7 @@ const ItenaryDetails = ({
               </Text>
             </View>
             <View className="py-3 px-5">
-              {tripDetails.safetyTips.map((item, index) => {
+              {tripData?.safetyTips.map((item, index) => {
                 return (
                   <View
                     key={index}
