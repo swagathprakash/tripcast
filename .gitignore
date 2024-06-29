@@ -1,5 +1,6 @@
 /front-end/node_modules
 /front-end/.expo
+/front-end/.env
 /back-end/.env.sample
 .vscode
 /back-end/.env
