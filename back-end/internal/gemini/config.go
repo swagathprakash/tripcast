@@ -24,6 +24,7 @@ type Activity struct {
 	Location         string `json:"location"`
 	Description      string `json:"description"`
 	WeatherCondition string `json:"weatherCondition"`
+	WeatherCode      int    `json:"weather_code"`
 }
 
 type Itinerary []struct {
@@ -33,6 +34,7 @@ type Itinerary []struct {
 
 type Forecast []struct {
 	Time        string `json:"time"`
+	Activity    string `json:"activity"`
 	Weather     string `json:"weather"`
 	WeatherCode int    `json:"weather_code"`
 }
@@ -96,6 +98,7 @@ Generate response in json format as below
             "location": "String-Location of the activity",
             "description": "String - Description of the activity",
             "weatherCondition": "String - Expected weather condition during this activity"
+            "weather_code": Integer - WMO weather code of weather condition
           }
         ]
       }
@@ -103,6 +106,7 @@ Generate response in json format as below
     "forecast": [
       {
         "time": "String - day and time from itinerary in YYYY-MM-DDTHH:MM format",
+        "activity": "String - short description of activity from itenarary of that time",
         "weather": "String - 2 word weather description of that time",
         "weather_code": Integer - WMO weather code of each hour of that time
       }

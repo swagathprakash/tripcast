@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 )
 
@@ -11,6 +12,7 @@ type Notifications struct {
 	TripID         uint64
 	UserID         uint64
 	IsRead         bool
+	WeatherChange  json.RawMessage
 	CreatedAt      time.Time
 }
 

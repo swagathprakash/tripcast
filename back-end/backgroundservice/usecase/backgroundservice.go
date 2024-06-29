@@ -35,7 +35,7 @@ func (u *backGroundServiceUsecase) BackgroundNotificationProcesses(params any) (
 		return nil, constants.ErrBackgroundNotificationParams
 	}
 	ctx := context.Background()
-	ticker := time.NewTicker(15 * time.Second)
+	ticker := time.NewTicker(time.Second)
 
 	offset := 0
 
@@ -79,7 +79,7 @@ func (u *backGroundServiceUsecase) createNotification(val any) (any, error) {
 			log.Printf("failed to unmarshal the forcast: %s with error %s\n", string(trip.Forecast), err.Error())
 			return nil, err
 		}
-		forcastTimeAndWeatherCode := getForcastTimeAndWeatherCode(forcast)
+		timeWeatherActivity := getTimeWeatherActivity(forcast)
 		params := weather.Params{
 			Latitude:  trip.Latitude,
 			Longitude: trip.Longitude,
@@ -92,11 +92,12 @@ func (u *backGroundServiceUsecase) createNotification(val any) (any, error) {
 		}
 
 		for index, time := range weather.Hourly.Time {
-			weatherCode, ok := forcastTimeAndWeatherCode[time]
+			timeWeatherActivity, ok := timeWeatherActivity[time]
 			if ok {
-				if weatherCode != weather.Hourly.WeatherCode[index] {
+				if timeWeatherActivity.WeatherCode != weather.Hourly.WeatherCode[index] {
+					timeWeatherActivity.CurrentWeather = weather.Hourly.WeatherDetail[index]
 					// sentNotification
-					err = u.sendNotification(notificationParams.Ctx, trip)
+					err = u.sendNotification(notificationParams.Ctx, trip, timeWeatherActivity)
 					if err != nil {
 						log.Println("failed to create and sent notification with error", err)
 						return nil, err
@@ -110,21 +111,33 @@ func (u *backGroundServiceUsecase) createNotification(val any) (any, error) {
 	return nil, nil
 }
 
-func getForcastTimeAndWeatherCode(forcast gemini.Forecast) map[string]int {
-	forcastTimeAndWeatherCode := make(map[string]int)
+func getTimeWeatherActivity(forcast gemini.Forecast) map[string]domain.WeatherChangeResponse {
+	forcastTimeAndWeatherCode := make(map[string]domain.WeatherChangeResponse)
 	for _, f := range forcast {
-		forcastTimeAndWeatherCode[f.Time] = f.WeatherCode
+		forcastTimeAndWeatherCode[f.Time] = domain.WeatherChangeResponse{
+			WeatherCode: f.WeatherCode,
+			Activity:    f.Activity,
+			PastWeather: f.Weather,
+		}
 	}
 	return forcastTimeAndWeatherCode
 }
 
-func (u *backGroundServiceUsecase) sendNotification(ctx context.Context, trip domain.Trip) error {
-	notification := domain.Notifications{
-		Content: constants.NotificationContent,
-		TripID:  uint64(trip.TripID),
-		UserID:  uint64(trip.UserID),
+func (u *backGroundServiceUsecase) sendNotification(ctx context.Context, trip domain.Trip, weatherChange domain.WeatherChangeResponse) error {
+
+	jsonText, err := json.Marshal(weatherChange)
+	if err != nil {
+		log.Println("json.Marshal(weatherChange) failed with error", err)
+		return err
 	}
-	err := u.notificationRepository.Insert(ctx, notification)
+
+	notification := domain.Notifications{
+		Content:       constants.NotificationContent,
+		TripID:        uint64(trip.TripID),
+		UserID:        uint64(trip.UserID),
+		WeatherChange: jsonText,
+	}
+	err = u.notificationRepository.Insert(ctx, notification)
 	if err != nil {
 		log.Println("failed to store notification with error", err)
 		return err

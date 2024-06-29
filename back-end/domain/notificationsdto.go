@@ -2,16 +2,18 @@ package domain
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 )
 
 type NotificationsDTO struct {
-	NotificationID uint64    `json:"notification_id"`
-	Content        string    `json:"content"`
-	TripID         uint64    `json:"trip_id"`
-	UserID         uint64    `json:"user_id"`
-	IsRead         bool      `json:"is_read"`
-	CreatedAt      time.Time `json:"created_at"`
+	NotificationID uint64          `json:"notification_id"`
+	Content        string          `json:"content"`
+	TripID         uint64          `json:"trip_id"`
+	UserID         uint64          `json:"user_id"`
+	IsRead         bool            `json:"is_read"`
+	CreatedAt      time.Time       `json:"created_at"`
+	WeatherChange  json.RawMessage `json:"weather_change"`
 }
 
 type NotificationModifyRequest struct {
@@ -30,4 +32,12 @@ func (dto *NotificationsDTO) MapFromDomain(domain Notifications) {
 	dto.UserID = domain.UserID
 	dto.IsRead = domain.IsRead
 	dto.CreatedAt = domain.CreatedAt
+	dto.WeatherChange = domain.WeatherChange
+}
+
+type WeatherChangeResponse struct {
+	WeatherCode    int
+	Activity       string
+	PastWeather    string
+	CurrentWeather string
 }
