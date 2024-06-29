@@ -79,6 +79,8 @@ func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, trip := range trips {
+		// calculating the no of days
+		trip.Duration = int(trip.EndDate.Sub(trip.StartDate).Hours()/24) + 1
 		response := domain.TripsDetailsResponse{}
 		trip.MapFromDomain(&response)
 
@@ -87,7 +89,7 @@ func (h *tripsHandler) FetchTrips(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		// seperate finished and upcomming trips
-		if trip.EndDate.After(time.Now()) {
+		if trip.EndDate.After(time.Now().AddDate(0, 0, 1)) {
 			responses.Finished = append(responses.Finished, response)
 			continue
 		}
