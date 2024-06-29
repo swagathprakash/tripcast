@@ -7,6 +7,7 @@ import { clearUser } from "@/store/slice/authSlice";
 import { router } from "expo-router";
 import { storeData } from "@/libs/utils";
 import LoginButtonCard from "../LoginButtonCard";
+import { clearTripDetails } from "@/store/slice/itenararySlice";
 
 const ProfilePage = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -60,6 +61,7 @@ const ProfilePage = () => {
               className="m-3 mb-5  bg-red-500 rounded-md shadow-md shadow-black justify-center py-2"
               onPress={() => {
                 storeData("");
+                dispatch(clearTripDetails({}))
                 dispatch(clearUser({}));
                 router.push("/");
               }}
@@ -71,7 +73,7 @@ const ProfilePage = () => {
           </View>
         </View>
       ) : (
-        <LoginButtonCard headerText="Please login to view profile details"/>
+        <LoginButtonCard headerText="Please login to view profile details" />
       )}
       <View className="m-3 mb-10 bg-white shadow-md shadow-gray-500 rounded-md ">
         <View className="px-3 py-3 border-b-[1px] flex-row justify-between items-center border-b-gray-100">

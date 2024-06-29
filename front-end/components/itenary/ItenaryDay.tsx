@@ -22,7 +22,7 @@ const ItenaryDay = () => {
       <ItenaryBody index={dayIndex} sections={tripDetails.itinerary} />
     </View>
   ) : (
-    <ActivityIndicator />
+    <ActivityIndicator className="my-auto" size='large' color='#1f1e1e' />
   );
 };
 

@@ -39,7 +39,10 @@ const ItenaryDetails = ({
   return (
     <>
       {loading ? (
-        <ActivityIndicator />
+        <View className="my-auto">
+          <ActivityIndicator className="my-auto" size='large' color='#1f1e1e' />
+          <Text className="text-center text-primary">Thank you for your patience! We're currently working on creating your personalized itinerary based on your preferences and weather details. This may take a moment. Sit tight, and we'll have your itinerary ready shortly.</Text>
+        </View>
       ) : tripData ? (
         <View>
           <Text className="text-4xl py-5 font-semibold text-primary px-5">

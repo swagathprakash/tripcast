@@ -141,6 +141,8 @@ const itinararySlice = createSlice({
   reducers: {
     clearTripDetails: (state, action) => {
       state.tripDetails = undefined;
+      state.finished = undefined;
+      state.upcoming = undefined;
     },
   },
   extraReducers(builder) {
