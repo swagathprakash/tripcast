@@ -58,7 +58,7 @@ const NotificationPage = () => {
     <ActivityIndicator size={"large"} color={"#1f1e1e"} className="my-52" />
   ) : (user ?
     <View className="px-5">
-      {notifications?.length === 0 ? (
+      {!notifications? (
         <View className="flex h-[75vh] justify-center items-center">
           <Image
             source={images.noNotification}
@@ -71,13 +71,15 @@ const NotificationPage = () => {
           <Text className="pt-2 font-semibold text-gray-400">
             You have no notifications right now.
           </Text>
-          <Text className="font-semibold text-gray-400">Come back later</Text>
+          <TouchableOpacity className='items-end' onPress={() => setReload(!reload)}>
+              <Ionicons name="reload" size={20} color="#1f1e1e" />
+            </TouchableOpacity>
         </View>
       ) : (
-        <View>
-          <View className="px-1 py-3 border-b-[1px] flex-row justify-between items-center border-b-gray-100">
+        <View className="min-h-[100px]">
+          <View className="px-1 py-3 border-b-[1px] flex-row justify-between items-center border-b-gray-100 min-h-4">
             <Text className="text-xl font-semibold text-primary">
-              Notifications ({unreadCount})
+                  Notifications {unreadCount && `(${unreadCount})`}
             </Text>
             <TouchableOpacity className='items-end' onPress={() => setReload(!reload)}>
               <Ionicons name="reload" size={20} color="#1f1e1e" />

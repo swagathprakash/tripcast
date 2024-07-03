@@ -137,7 +137,7 @@ const ItenaryDetails = ({
               <Pressable
                 className="m-3 mb-5  bg-primary rounded-md shadow-md shadow-gray-500 justify-center py-2"
                 onPress={() => {
-                  router.push("/itenary-day");
+                  router.push(`/itenary-day?tripId=${tripId}`);
                 }}
               >
                 <Text className="w-full text-center text-white text-lg font-bold">

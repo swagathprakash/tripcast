@@ -5,21 +5,22 @@ import ItenaryBody from "./ItenaryBody";
 import { useAppSelector } from "@/store";
 
 
-const ItenaryDay = () => {
-  const { tripDetails } = useAppSelector((state) => state.itenrary);
+const ItenaryDay = ({tripId}:{tripId?: string | string[] | undefined}) => {
+  const { tripDetails, selectedTrip } = useAppSelector((state) => state.itenrary);
+  const tripData = tripId !=='undefined' ? selectedTrip : tripDetails;
 
   const [dayIndex, setDayIndex] = useState<number>(0);
-  return tripDetails ? (
+  return tripData ? (
     <View className="flex-1">
       <Text className="text-primary font-semibold text-3xl my-5 pt-3 mx-3">
-        {tripDetails?.destination}
+        {tripData?.destination}
       </Text>
       <ItenaryDayHeader
         dayIndex={dayIndex}
-        length={tripDetails?.itinerary?.length as number}
+        length={tripData?.itinerary?.length as number}
         setDayIndex={setDayIndex}
       />
-      <ItenaryBody index={dayIndex} sections={tripDetails.itinerary} />
+      <ItenaryBody index={dayIndex} sections={tripData.itinerary} />
     </View>
   ) : (
     <ActivityIndicator className="my-auto" size='large' color='#1f1e1e' />
