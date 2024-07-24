@@ -37,6 +37,8 @@ type EnvVariables struct {
 
 	NgrokToken string `required:"true" split_words:"true"`
 	NgrokUrl   string `required:"true" split_words:"true"`
+
+	SecretKey string `required:"true" split_words:"true"`
 }
 
 func NewEnvConfig() EnvVariables {

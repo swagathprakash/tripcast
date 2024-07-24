@@ -14,7 +14,7 @@ import (
 	"trip-cast/internal/sms"
 	"trip-cast/internal/weather"
 	"trip-cast/internal/workerpool"
-	"trip-cast/middlewares"
+	customMiddleware "trip-cast/middlewares"
 	placesHandler "trip-cast/nearbyplaces/handler"
 	placesUsecase "trip-cast/nearbyplaces/usecase"
 	notificationHandler "trip-cast/notifications/handler"
@@ -31,8 +31,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	_ "github.com/lib/pq"
-	"github.com/rs/cors"
 	"golang.ngrok.com/ngrok"
 	"golang.ngrok.com/ngrok/config"
 )
@@ -47,6 +47,9 @@ func main() {
 	db := database.NewDatabase(env.DatabaseUser, env.DatabasePassword, env.DatabaseName, env.DatabaseHost, env.DatabasePort)
 	defer db.Close()
 
+	ur := usersRepository.NewUsersRepository(db)
+	customMiddleware := customMiddleware.Init(&env, ur)
+
 	// CORS middleware
 	corsHandler := cors.New(cors.Options{
 		AllowedOrigins:   []string{env.FrontEndURL},
@@ -58,7 +61,8 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(middlewares.SetContentType)
+	r.Use(middleware.AllowContentType("application/json"))
+	r.Use(customMiddleware.ValidateAccessToken())
 	r.Use(corsHandler)
 
 	// setup services
@@ -68,9 +72,8 @@ func main() {
 	locationService := location.NewLocationService(env.PlacesAPIKey)
 
 	// setup handlers
-	ur := usersRepository.NewUsersRepository(db)
 	uu := usersUsecase.NewUsersUsecase(ur, smsService)
-	usersHandler.NewUsersHandler(r, uu)
+	usersHandler.NewUsersHandler(r, uu, &env)
 
 	wu := weatherUsecase.NewWeatherUsecase(locationService, weatherService)
 	weatherHandler.NewWeatherHandler(r, wu)

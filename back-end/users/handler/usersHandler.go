@@ -5,20 +5,25 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 	"trip-cast/constants"
 	"trip-cast/domain"
 	"trip-cast/internal/api"
+	"trip-cast/internal/env"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type usersHandler struct {
 	usersUsecase domain.UsersUsecase
+	env          *env.EnvVariables
 }
 
-func NewUsersHandler(r *chi.Mux, usersUsecase domain.UsersUsecase) {
+func NewUsersHandler(r *chi.Mux, usersUsecase domain.UsersUsecase, env *env.EnvVariables) {
 	usersHandler := &usersHandler{
 		usersUsecase: usersUsecase,
+		env:          env,
 	}
 	r.Get("/get-otp", usersHandler.GenerateOTP)
 	r.Post("/verify-otp", usersHandler.VerifyOTP)
@@ -62,25 +67,52 @@ func (h *usersHandler) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		}
 		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
 			Code:    http.StatusInternalServerError,
-			Message: constants.ErrInternalServerError.Error(),
+			Message: err.Error(),
 		}})
 		return
 	}
+
+	token, err := createAccessToken(request.Phone, h.env.SecretKey)
+	if err != nil {
+		api.Fail(w, http.StatusInternalServerError, []api.Errors{{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}})
+		return
+	}
+
 	var res domain.OTPVerifiedResponse
-	
+
 	if userData == nil {
 		res = domain.OTPVerifiedResponse{
 			Verified:    true,
 			UserPresent: false,
+			UserToken:   token,
 		}
 	} else {
 		res = domain.OTPVerifiedResponse{
 			Verified:    true,
 			UserPresent: true,
+			UserToken:   token,
 		}
 	}
 
 	api.Success(w, http.StatusOK, res)
+}
+
+func createAccessToken(phoneNumber, secretKey string) (string, error) {
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		string(constants.JwtClaimPhone): phoneNumber,
+		string(constants.JwtExpTime):    time.Now().Add(time.Second * 10).Unix(),
+	})
+
+	tokenString, err := token.SignedString([]byte(secretKey))
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 }
 
 func (h *usersHandler) Register(w http.ResponseWriter, r *http.Request) {

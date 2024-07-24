@@ -17,8 +17,9 @@ type UserRegisterResponse struct {
 }
 
 type OTPVerifiedResponse struct {
-	Verified    bool     `json:"verified"`
-	UserPresent bool     `json:"user_present"`
+	Verified    bool   `json:"verified"`
+	UserPresent bool   `json:"user_present"`
+	UserToken   string `json:"user_token"`
 }
 
 func (dto *UsersDTO) MapFromDomain(domain *Users) {

@@ -110,6 +110,12 @@ var Sights = []string{
 	"entertainment.zoo",
 }
 
-const(
+const (
 	NotificationContent = "We wanted to let you know that the weather conditions for your planned trip have changed. Please check the latest forecast for and change the itinerary if needed. Stay safe!"
+)
+
+const (
+	ContextUserIDKey = "user_id"
+	JwtClaimPhone    = "phone"
+	JwtExpTime       = "expiry"
 )

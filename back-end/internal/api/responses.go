@@ -30,7 +30,7 @@ func Fail(w http.ResponseWriter, status int, errors []Errors) {
 	if err != nil {
 		http.Error(
 			w,
-			http.StatusText(http.StatusInternalServerError),
+			err.Error(),
 			http.StatusInternalServerError,
 		)
 		return
@@ -44,7 +44,7 @@ func Success(w http.ResponseWriter, status int, data any) {
 	if err != nil {
 		http.Error(
 			w,
-			http.StatusText(http.StatusInternalServerError),
+			err.Error(),
 			http.StatusInternalServerError,
 		)
 		return
@@ -59,7 +59,7 @@ func Success(w http.ResponseWriter, status int, data any) {
 	if err != nil {
 		http.Error(
 			w,
-			http.StatusText(http.StatusInternalServerError),
+			err.Error(),
 			http.StatusInternalServerError,
 		)
 		return
