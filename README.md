@@ -1,5 +1,9 @@
 # TRIPCAST
 
+Tripcast is a Google Gemini based mobile application that generates weather based trip itenerary according to users inputs like trip destination, trip start and end dates. Application provides a complete itenarary based on the weather condition for those days.
+
+Users can also search for popular attractions in a city and its current weather
+
 ### Build backend application
 
 - Run command `make start-server` to build all the applications (database, migration, api).
@@ -8,6 +12,12 @@
 ### Run all migrations
 
 - Run command `make migrate-up` to run the migrations.
+
+### Start frontend application
+
+- Run command `make node` to build node modules.
+- Run command `make start-app` to start front end application and generate connection QR-code.
+- Use expo mobile app to scan the QR-code and start the mobile app
 
 ## DB Migrations
 
