@@ -16,8 +16,6 @@ services:
 
   tripcast-backend:
     build: .
-    ports:
-      - "0.0.0.0:4003:4003"
     depends_on:
       - tripcast-db
       - migrate

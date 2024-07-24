@@ -34,6 +34,9 @@ type EnvVariables struct {
 	PlacesAPIKey string `required:"true" split_words:"true"`
 
 	MaxWorkers int `required:"true" split_words:"true"`
+
+	NgrokToken string `required:"true" split_words:"true"`
+	NgrokUrl   string `required:"true" split_words:"true"`
 }
 
 func NewEnvConfig() EnvVariables {

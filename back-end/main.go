@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	backgroundservice "trip-cast/backgroundservice/usecase"
@@ -34,6 +33,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
+	"golang.ngrok.com/ngrok"
+	"golang.ngrok.com/ngrok/config"
 )
 
 func main() {
@@ -59,7 +60,6 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middlewares.SetContentType)
 	r.Use(corsHandler)
-
 
 	// setup services
 	smsService := sms.NewSMSService(env.TwillioAccountSID, env.TwillioPhoneNumber, env.TwillioAuthID)
@@ -100,8 +100,14 @@ func main() {
 		IsResultExpected: false,
 	})
 
+	// Initialize the ngrok tunnel
+	tunnel, err := ngrok.Listen(ctx, config.HTTPEndpoint(config.WithDomain(env.NgrokUrl)), ngrok.WithAuthtoken(env.NgrokToken))
+	if err != nil {
+		log.Fatalf("Failed to start ngrok tunnel: %v", err)
+	}
+
+	log.Println("Server running on: ", tunnel.URL())
+
 	// start server
-	log.Println("Server started")
-	apiPort := fmt.Sprintf(":%d", env.ApiPort)
-	http.ListenAndServe(apiPort, r)
+	log.Fatal(http.Serve(tunnel, r))
 }

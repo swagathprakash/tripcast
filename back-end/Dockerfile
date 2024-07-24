@@ -11,5 +11,4 @@ RUN apk --no-cache add tzdata
 WORKDIR /root/
 COPY --from=builder /app/.env.sample .
 COPY --from=builder /app/tripcast .
-EXPOSE 4003
 CMD ["./tripcast"]
